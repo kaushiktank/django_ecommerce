@@ -1,0 +1,74 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+
+<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Register</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="category.html">Register</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Login Box Area =================-->
+	<section class="login_box_area section_gap">
+		<div class="container">
+			<div class="login_form_inner">
+				<h3>Register</h3>
+				<form class="row login_form" action="" method="post" id="contactForm" novalidate="novalidate">
+                    {% csrf_token %}
+					<div class="col-md-12 form-group">
+                        <!-- <label>{{ form.username.label }}</label> -->
+                    {{ form.username }}
+					</div>
+                    <div class="col-md-12 form-group">
+                        <!-- <label>{{ form.email.label }}</label> -->
+                        {{ form.email }}
+					</div>
+					<div class="col-md-12 form-group">
+                        <!-- <label>{{ form.password1.label }}</label> -->
+                        {{ form.password1 }}
+					</div>
+                    <div class="col-md-12 form-group">
+                        <!-- <label>{{ form.password2.label }}</label> -->
+                        {{ form.password2 }}
+					</div>
+					<div class="col-md-12 form-group">
+						<button type="submit" value="submit" class="primary-btn">Register</button>
+					</div>
+				</form>
+				{{ form.errors }}
+				<label >Already have an account <a href={% url 'login_user' %}>Login</a></label>
+
+			</div>
+		</div>
+
+	</section>
+	<!--================End Login Box Area =================-->
+
+    <script>
+        var form_fields = document.getElementsByTagName('input')
+		form_fields[2].placeholder='Username';
+		form_fields[3].placeholder='Email';
+		form_fields[4].placeholder='Enter password';
+		form_fields[5].placeholder='Re-enter Password';
+
+		form_fields[2].className += 'form-control';
+		form_fields[3].className += 'form-control';
+		form_fields[4].className += 'form-control';
+		form_fields[5].className += 'form-control';
+
+
+
+    </script>
+
+{% endblock content %}
