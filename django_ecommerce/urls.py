@@ -1,13 +1,13 @@
 from django.contrib import admin
-from django.urls import path
-from users import views as userView
-from products import views as prodView
-
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('',prodView.home_page, name='homepage'),
+    path('', include(('products.urls', 'products'), namespace = 'products')),
+    path('user/', include(('users.urls', 'users'), namespace='users')),
     path('admin/', admin.site.urls),
-    path('login/', userView.login_page, name='login_user'),
-    path('logout/', userView.logout_page, name='logout'),
-    path('register/', userView.register_page, name='register'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

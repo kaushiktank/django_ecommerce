@@ -10,8 +10,8 @@
 				<div class="col-first">
 					<h1>Register</h1>
 					<nav class="d-flex align-items-center">
-						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
-						<a href="category.html">Register</a>
+						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href={% url 'users:register' %}>Register</a>
 					</nav>
 				</div>
 			</div>
@@ -47,7 +47,7 @@
 					</div>
 				</form>
 				{{ form.errors }}
-				<label >Already have an account <a href={% url 'login_user' %}>Login</a></label>
+				<label >Already have an account <a href={% url 'users:login_user' %}>Login</a></label>
 
 			</div>
 		</div>
