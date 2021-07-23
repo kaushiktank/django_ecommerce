@@ -6,10 +6,10 @@
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
-					<h1>Shop</h1>
+					<h1>{{category_name}}</h1>
 					<nav class="d-flex align-items-center">
 						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
-						<a href="">Shop</span></a>
+						<a href=''>{{category_name}}</a>
 					</nav>
 				</div>
 			</div>
@@ -22,41 +22,36 @@
 				<div class="sidebar-categories">
 					<div class="head">Browse Categories</div>
 					<ul class="main-categories">
-						{% for category in category %}
+						{% for category in categorys %}
 						<li class="main-nav-list"><a href={% url 'products:filter_by_category' category.category_id %}><span
 								 class="lnr lnr-arrow-right"></span>{{category.category_name}}<span class="number">({{ category.category_count }})</span></a>
 						</li>
 						{% endfor %}						
 					</ul>
 				</div>
-				<!-- {{total_products}} -->
-				<div class="sidebar-categories">
-					<div class="head">Browse Brands</div>
-					<ul class="main-categories">
-						{% for brand in brand_product %}
-						<li class="main-nav-list"><a href={% url 'products:filter_by_brand' brand.brand_id %}><span
-								 class="lnr lnr-arrow-right"></span>{{brand.brand_name}}<span class="number">({{ brand.product_count }})</span></a>
-						</li>
-						{% endfor %}						
-					</ul>
-				</div>
+		
 			</div>
 			<div class="col-xl-9 col-lg-8 col-md-7">
-				<!-- Start Best Seller -->
+
 				<section class="lattest-product-area pb-40 category-list">
 					<div class="row">
+
+						{% if custom_message %}
+							<h1>{{custom_message}}</h1>
+						{% endif %}
+
 						<!-- single product -->
 						{% for product in products %}
-						<a href={% url 'products:product_details' product.id %}>
-							<div class="col-lg-4 col-md-6">
-								<div class="single-product">
-									<img class="img-fluid" src={{ product.prod_images.url }} alt="" style="height: 6.7cm;">
-									<div class="product-details">
-										<h6>{{ product.prod_name }}</h6>
-										<div class="price">
-											<h6><i class="fa fa-inr" aria-hidden="true"></i> {{ product.prod_price }}</h6>
-										</div>
-										<form action="" method="post">
+                        <a href={% url 'products:product_details' product.id %}>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-product">
+                                    <img class="img-fluid" src={{ product.prod_images.url }} alt="" style="height: 6.7cm;">
+                                    <div class="product-details">
+                                        <h6>{{ product.prod_name }}</h6>
+                                        <div class="price">
+                                            <h6><i class="fa fa-inr" aria-hidden="true"></i> {{ product.prod_price }}</h6>
+                                        </div>
+                                        <form action="" method="post">
 											{% csrf_token %}
 											<div class="prd-bottom">
 												<label value={{ product.id }} id="product_id"></label>
@@ -67,11 +62,11 @@
 												</a>
 											</div>
 										</form>
-									</div>
-								</div>
-							</div>
-						</a>
-						{% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+			            {% endfor %}
 					</div>
 				</section>
 				<!-- End Best Seller -->

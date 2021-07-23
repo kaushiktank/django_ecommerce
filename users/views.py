@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 from .forms import CreateUserForm
 
@@ -39,3 +40,9 @@ def register_page(request):
 
     content = {'form': form}
     return render(request, 'register.html', content)
+
+
+def user_profile(request):
+    user_profile = User.objects.filter(id = request.user.id)
+    context = {'user_profile':user_profile}
+    return render(request, 'user_profile.html', context)

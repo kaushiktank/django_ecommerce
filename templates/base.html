@@ -54,22 +54,23 @@
 						<ul class="nav navbar-nav menu_nav ml-auto">
 							<li class="nav-item active"><a class="nav-link" href={% url 'products:homepage' %}>Home</a></li>
 							<li class="nav-item submenu dropdown active">
-								<a href={% url 'products:shoppage' %} class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+								<a href={% url 'products:shoppage' %} class="nav-link dropdown-toggle" role="button" aria-haspopup="true"
 								 aria-expanded="false">Shop</a>
 								<ul class="dropdown-menu">
 									<li class="nav-item"><a class="nav-link" href={% url 'products:all_brands' %}>Shop By Brand</a></li>
+									<li class="nav-item"><a class="nav-link" href={% url 'products:all_category' %}>Shop By Category</a></li>
 								</ul>
 							</li>
 							{% if request.user.is_authenticated %}
 
-							<li class="nav-item"><a class="nav-link" href="#">Welcome, {{ request.user.username }} {{ request.user.id }}</a></li>
+							<li class="nav-item"><a class="nav-link" href={% url 'users:user_profile' %}>Welcome, {{ request.user.username }}</a></li>
 							<li class="nav-item"><a class="nav-link" href={% url 'users:logout' %}>Logout</a></li>							
 							{% else %}
 								<li class="nav-item"><a class="nav-link" href={% url 'users:login_user' %}>Login / Register</a></li>
 							{% endif %}
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href="#" class="cart"><span class="ti-bag"></span></a></li>
+							<li class="nav-item"><a href={% url 'products:get_cart_details' %} class="cart"><span class="ti-bag"></span></a></li>
 							<li class="nav-item">
 								<button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
 							</li>
@@ -80,7 +81,7 @@
 		</div>
 		<div class="search_input" id="search_input_box">
 			<div class="container">
-				<form class="d-flex justify-content-between">
+				<form class="d-flex justify-content-between" method="GET" action={% url 'products:get_search_results' %}>
 					<input type="text" class="form-control" id="search_input" placeholder="Search Here">
 					<button type="submit" class="btn"></button>
 					<span class="lnr lnr-cross" id="close_search" title="Close Search"></span>

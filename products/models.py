@@ -17,6 +17,7 @@ class ProductSubCategory(models.Model):
     def __str__(self):
         return self.sub_category
 
+
 class ProdBrand(models.Model):
     brand = models.CharField(max_length=255)
 
@@ -36,4 +37,10 @@ class Products(models.Model):
 
     def __str__(self):
         return self.prod_name
+
+
+class Cart(models.Model):
+    user_id = models.IntegerField()
+    product_id = models.IntegerField()
+    cart_quantity = models.IntegerField(default=1)
 

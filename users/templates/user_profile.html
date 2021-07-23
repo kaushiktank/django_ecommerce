@@ -1,0 +1,166 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>{{ request.user.username }}</h1>
+					<nav class="d-flex align-items-center">
+						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
+						<!-- <a href=""></a> -->
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+    <section class="order_details section_gap">
+		<div class="container">
+                <div class="d-flex flex-wrap align-items-center">
+					<div class="sorting mr-auto">
+                        <h2>{{request.user.username}}'s Profile</h2>
+					</div>
+					<div class="">
+                        <a href="#" class="genric-btn primary">Edit</a>
+                    </div>
+				</div>
+				<div class="table-responsive">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									<p>User Name: </p>
+								</td>
+								<td>
+									<p>{{ request.user.username }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>First Name: </p>
+								</td>
+								<td>
+									<p>{{ request.user.first_name }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>Last Name: </p>
+								</td>
+								<td>
+									<p>{{ request.user.last_name }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>Email: </p>
+								</td>
+								<td>
+									<p>{{ request.user.email }}</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+                <div class="d-flex flex-wrap align-items-center">
+					<div class="sorting mr-auto">
+                        <h2>Contact Details</h2>
+					</div>
+					<div class="">
+                        <a href="#" class="genric-btn primary">Edit</a>
+                    </div>
+				</div>
+                <div class="table-responsive">
+					<table class="table">
+						<tbody>
+                            <tr>
+								<td>
+									<p>Mobile number: </p>
+								</td>
+								<td>
+									<p>{{ request.user.last_name }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>Alternative Mobile Number: </p>
+								</td>
+								<td>
+									<p>{{ request.user.email }}</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+                <div class="d-flex flex-wrap align-items-center">
+					<div class="sorting mr-auto">
+                        <h2>Address</h2>
+					</div>
+					<div class="">
+                        <a href="#" class="genric-btn primary">Edit</a>
+                    </div>
+				</div>
+                <div class="table-responsive">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									<p>Address Line 1: </p>
+								</td>
+								<td>
+									<p>{{ request.user.username }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>Address Line 2: </p>
+								</td>
+								<td>
+									<p>{{ request.user.first_name }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>City: </p>
+								</td>
+								<td>
+									<p>{{ request.user.last_name }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>State: </p>
+								</td>
+								<td>
+									<p>{{ request.user.email }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>Zipcode: </p>
+								</td>
+								<td>
+									<p>{{ request.user.email }}</p>
+								</td>
+							</tr>
+                            <tr>
+								<td>
+									<p>Country: </p>
+								</td>
+								<td>
+									<p>{{ request.user.email }}</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+			</div>
+		</div>
+	</section>
+
+
+{% endblock content %}
