@@ -1,3 +1,4 @@
+from users.models import Address, UserMobileNo
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -43,6 +44,13 @@ def register_page(request):
 
 
 def user_profile(request):
-    user_profile = User.objects.filter(id = request.user.id)
-    context = {'user_profile':user_profile}
+    user_mobile_number = UserMobileNo.objects.filter(user = request.user.id)[0]
+    print(user_mobile_number)
+    address = Address.objects.filter(user = request.user.id)[0]
+    print(address)
+    context = {'user_mobile_number':user_mobile_number, 'address':address}
     return render(request, 'user_profile.html', context)
+
+
+def edit_user_profile(request):
+    return render (request, 'user_profile_edit.html')

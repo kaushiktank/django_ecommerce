@@ -1,0 +1,199 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>{{ request.user.username }} Edit Profile</h1>
+					<nav class="d-flex align-items-center">
+						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
+						<!-- <a href=""></a> -->
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+    <section class="checkout_area section_gap">
+        <div class="container">
+            <div class="billing_details">
+                <div class="row">
+					<h3>Edit Profile</h3>
+					<div class="table-responsive">
+						<table class="table">
+							<tbody>
+								<tr>
+									<td>
+										<p>User Name: </p>
+									</td>
+									<td>
+										<p>{{ request.user.username }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>First Name: </p>
+									</td>
+									<td>
+										<p>{{ request.user.first_name }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Last Name: </p>
+									</td>
+									<td>
+										<p>{{ request.user.last_name }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Email: </p>
+									</td>
+									<td>
+										<p>{{ request.user.email }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Mobile number: </p>
+									</td>
+									<td>
+										<p>{{ user_mobile_number.mobile_number }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Alternative Mobile Number: </p>
+									</td>
+									<td>
+										<p>{{ user_mobile_number.alternative_mobile_number }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Address Line 1: </p>
+									</td>
+									<td>
+										<p>{{ address.address_line_1 }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Address Line 2: </p>
+									</td>
+									<td>
+										<p>{{ address.address_line_2 }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>City: </p>
+									</td>
+									<td>
+										<p>{{ address.city }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>State: </p>
+									</td>
+									<td>
+										<p>{{ address.state }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Zipcode: </p>
+									</td>
+									<td>
+										<p>{{ address.zip_code }}</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Country: </p>
+									</td>
+									<td>
+										<p>{{ address.country }}</p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+	
+				</div>
+					<form class="row contact_form" action="#" method="post" novalidate="novalidate">
+						<div class="col-md-6 form-group p_star">
+							<input type="text" class="form-control" id="first" name="name">
+							<span class="placeholder" data-placeholder="First name"></span>
+						</div>
+						<div class="col-md-6 form-group p_star">
+							<input type="text" class="form-control" id="last" name="name">
+							<span class="placeholder" data-placeholder="Last name"></span>
+						</div>
+						<div class="col-md-12 form-group">
+							<input type="text" class="form-control" id="company" name="company" placeholder="Company name">
+						</div>
+						<div class="col-md-6 form-group p_star">
+							<input type="text" class="form-control" id="number" name="number">
+							<span class="placeholder" data-placeholder="Phone number"></span>
+						</div>
+						<div class="col-md-6 form-group p_star">
+							<input type="text" class="form-control" id="email" name="compemailany">
+							<span class="placeholder" data-placeholder="Email Address"></span>
+						</div>
+						<div class="col-md-12 form-group p_star">
+							<select class="country_select">
+								<option value="1">Country</option>
+								<option value="2">Country</option>
+								<option value="4">Country</option>
+							</select>
+						</div>
+						<div class="col-md-12 form-group p_star">
+							<input type="text" class="form-control" id="add1" name="add1">
+							<span class="placeholder" data-placeholder="Address line 01"></span>
+						</div>
+						<div class="col-md-12 form-group p_star">
+							<input type="text" class="form-control" id="add2" name="add2">
+							<span class="placeholder" data-placeholder="Address line 02"></span>
+						</div>
+						<div class="col-md-12 form-group p_star">
+							<input type="text" class="form-control" id="city" name="city">
+							<span class="placeholder" data-placeholder="Town/City"></span>
+						</div>
+						<div class="col-md-12 form-group p_star">
+							<select class="country_select">
+								<option value="1">District</option>
+								<option value="2">District</option>
+								<option value="4">District</option>
+							</select>
+						</div>
+						<div class="col-md-12 form-group">
+							<input type="text" class="form-control" id="zip" name="zip" placeholder="Postcode/ZIP">
+						</div>
+						<div class="col-md-12 form-group">
+							<div class="creat_account">
+								<input type="checkbox" id="f-option2" name="selector">
+								<label for="f-option2">Create an account?</label>
+							</div>
+						</div>
+						<div class="col-md-12 form-group">
+							<div class="creat_account">
+								<h3>Shipping Details</h3>
+								<input type="checkbox" id="f-option3" name="selector">
+								<label for="f-option3">Ship to a different address?</label>
+							</div>
+							<textarea class="form-control" name="message" id="message" rows="1" placeholder="Order Notes"></textarea>
+						</div>
+					</form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock content %}

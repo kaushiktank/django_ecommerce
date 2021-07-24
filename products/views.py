@@ -1,5 +1,5 @@
 from django.http.response import JsonResponse
-from products.forms import CartForm, SearchForm
+from products.forms import CartForm
 from typing import get_type_hints
 from django.shortcuts import redirect, render
 from .models import Cart, Products, ProductCategory, ProductSubCategory, ProdBrand
@@ -35,7 +35,7 @@ def get_category_count():
     return product_category
 
 def home_page(request):
-    products = Products.objects.all()
+    products = Products.objects.all()[:20]
     context = {'products': products}
     return render(request, 'index.html', context)
 
@@ -43,7 +43,7 @@ def home_page(request):
 def shop_page(request):
     category = get_category_count()
     subcategory = ProductSubCategory.objects.all()
-    products = Products.objects.all()
+    products = Products.objects.all()[:20]
 
     context = {'category': category,
                'subcategory': subcategory, 
@@ -55,14 +55,14 @@ def shop_page(request):
 
 def first_brands(request):
     brand_product = get_brands_count()
-    products = Products.objects.filter(prod_brand=brand_product[0]['brand_id'])
+    products = Products.objects.filter(prod_brand=brand_product[0]['brand_id'])[:20]
     brand_name = brand_product[0]['brand_name']
     context = {'brand_product':brand_product,'products':products, 'brand_name':brand_name}
     return render(request, 'shop_brand.html', context)
 
 
 def shop_brand(request, brand_id):
-    products = Products.objects.filter(prod_brand_id = brand_id)
+    products = Products.objects.filter(prod_brand_id = brand_id)[:20]
     if len(products) >= 1:
         context = {'brand_product':get_brands_count(), 'products':products}
     else:
@@ -96,23 +96,35 @@ def add_to_cart(request):
 
 
 def get_search_results(request):
-    form = SearchForm(request.GET)
-    print(form)
-    search = Products.objects.filter(prod_name__contains = 'google')
-    context = {'products':search}
+    product_category = ProductCategory.objects.all()
+    if request.method =='POST':       
+        search_query = request.POST['search']
+        try:
+            category_id = request.POST['dropdown']
+            search_result = Products.objects.filter(prod_category_id = category_id ,prod_name__contains = search_query)[:20]
+        except:
+            search_result = Products.objects.filter(prod_name__contains = search_query)[:20]
+
+        if len(search_result) >= 1:
+            context = {'products':search_result, 'product_category':product_category}
+        else:
+            context = {'product_category':product_category, 'custom_messages':"Data Not Found"}    
+    else:
+        context = {'product_category':product_category, 'custom_messages':"Make your Search"}
+
     return render(request, 'search_result.html', context)
 
 
 def first_category(request):
     category = get_category_count()
     category_name = category[0]['category_name']
-    products = Products.objects.filter(prod_category_id=category[0]['category_id'])
+    products = Products.objects.filter(prod_category_id=category[0]['category_id'])[:20]
     context = {'categorys':category, 'category_name':category_name,'products':products}
     return render(request, 'shop_category.html', context)
 
 
 def filter_category(request, category_id):
-    products = Products.objects.filter(prod_category_id = category_id)
+    products = Products.objects.filter(prod_category_id = category_id)[:20]
     if len(products) >= 1:
         context = {'categorys':get_category_count(), 'products':products}
     else:

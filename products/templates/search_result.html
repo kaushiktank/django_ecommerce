@@ -16,13 +16,37 @@
 		</div>
 	</section>
 	<!-- End Banner Area -->
+
+	<!-- Search Button and category selector -->
+
+	<!-- Display Results -->
 	<div class="container">
+		<form action="" method="post">
+			{% csrf_token %}
+				<div class="filter-bar d-flex flex-wrap align-items-center">
+					<div class="sorting">
+						<select name="dropdown">
+							<option value="" selected disabled>Select Category</option>
+							{% for category in product_category %}
+							<option value={{ category.id }}>{{ category.main_category }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-md-8 sorting">
+						<input type="text" class="form-control" id="search" name="search" placeholder="Search">
+					</div>
+					<div class="button-group-area mt-40">
+						<button type="submit" value="submit" class="genric-btn primary-border circle">Search</button>
+					</div>
+				</div>
+			</form>
 		<div class="row">
 			<div class="col-xl-9 col-lg-8 col-md-7">
 				<!-- Start Best Seller -->
 				<section class="lattest-product-area pb-40 category-list">
 					<div class="row">
 						<!-- single product -->
+						{% if products %}
 						{% for product in products %}
 						<a href={% url 'products:product_details' product.id %}>
 							<div class="col-lg-4 col-md-6">
@@ -44,6 +68,9 @@
 							</div>
 						</a>	
 			  			{% endfor %}
+						{% else %}
+							<h1>{{ custom_messages }}</h1>
+						{% endif %}
 					</div>
 				</section>
 				<!-- End Best Seller -->
