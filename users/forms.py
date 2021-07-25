@@ -8,3 +8,9 @@ class CreateUserForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
+
+class UpdateUserForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = '__all__'
+

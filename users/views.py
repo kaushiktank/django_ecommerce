@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from .forms import CreateUserForm
+from .forms import CreateUserForm, UpdateUserForm
 
 
 def login_page(request):
@@ -44,13 +44,20 @@ def register_page(request):
 
 
 def user_profile(request):
-    user_mobile_number = UserMobileNo.objects.filter(user = request.user.id)[0]
-    print(user_mobile_number)
-    address = Address.objects.filter(user = request.user.id)[0]
-    print(address)
+    try:
+        user_mobile_number = UserMobileNo.objects.filter(user = request.user.id)[0]
+    except:
+        user_mobile_number = None
+    try:
+        address = Address.objects.filter(user = request.user.id)[0]
+    except:
+        address = None
+
     context = {'user_mobile_number':user_mobile_number, 'address':address}
     return render(request, 'user_profile.html', context)
 
 
 def edit_user_profile(request):
-    return render (request, 'user_profile_edit.html')
+    user_form = UpdateUserForm()
+    context = {'user_form':user_form}
+    return render (request, 'user_profile_edit.html', context)
