@@ -80,7 +80,7 @@
                     <h6><i class="fa fa-inr" aria-hidden="true"></i> {{ product.prod_price }}</h6>
                   </div>
                   <div class="prd-bottom">
-                    <a href="" class="social-info">
+                    <a id="add_to_cart" class="social-info" onclick="addToCart({{ product.id }},{{ request.user.id }})">
                       <span class="ti-bag"></span>
                       <p class="hover-text">add to bag</p>
                     </a>
@@ -96,4 +96,5 @@
 	</section>
 	<!-- end product Area -->
 
+{% include 'ajax.html' %}
 {% endblock content %}

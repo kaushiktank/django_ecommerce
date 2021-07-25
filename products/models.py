@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
-
+from django.contrib.auth.models import User
 
 
 class ProductCategory(models.Model):
@@ -40,7 +40,7 @@ class Products(models.Model):
 
 
 class Cart(models.Model):
-    user_id = models.IntegerField()
+    user_id = models.ForeignKey(User, on_delete=CASCADE)
     product_id = models.IntegerField()
     cart_quantity = models.IntegerField(default=1)
 

@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from .forms import CreateUserForm, UpdateUserForm
+from .forms import CreateUserForm
 
 
 def login_page(request):
@@ -33,9 +33,7 @@ def register_page(request):
 
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
-        print("methoad is post")
         if form.is_valid():
-            print("form is valideted")
             form.save()
             return redirect('users:login_user')
 
@@ -58,6 +56,45 @@ def user_profile(request):
 
 
 def edit_user_profile(request):
-    user_form = UpdateUserForm()
-    context = {'user_form':user_form}
+    try:
+        mobile = UserMobileNo.objects.filter(user_id = request.user.id)[0]
+    except:
+        mobile = None
+    try:
+        address = Address.objects.filter(user_id = request.user.id)[0]
+    except:
+        address = None
+        
+    if request.method=='POST':  
+        user = User.objects.filter(id = request.user.id)
+        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        user.update(first_name = first_name, last_name = last_name, username = username)
+
+        mobile_number = request.POST.get('mobile_number')
+        alternative_mobile_number = request.POST.get('alternative_mobile')
+
+        address_line_1 = request.POST.get('address_line_1')
+        address_line_2 = request.POST.get('address_line_2')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        zip_code = request.POST.get('zipcode')
+        country = request.POST.get('country')
+
+        try:
+            mobile = UserMobileNo.objects.filter(user_id = request.user.id)
+            mobile.update(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number)
+        except:
+            UserMobileNo.objects.create(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number, user_id = request.user.id)
+
+        try:
+            address = Address.objects.filter(user_id = request.user.id)
+            address.update(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country)
+        except:
+            Address.objects.create(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country, user_id = request.user.id)
+
+        return redirect('users:user_profile')
+
+    context = {'mobile':mobile, 'address':address}
     return render (request, 'user_profile_edit.html', context)

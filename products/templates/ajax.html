@@ -1,11 +1,10 @@
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
   console.log("file included");
-  $('#add_to_cart').click(function(){
+  function addToCart(prod_id, usr_id){
     console.log("button cicked");
-    let product_id = ($('#product_id').attr('value'));
-    let user_id = ($('#user_id').attr('value'));
+    let product_id = prod_id;
+    let user_id = usr_id;
     if ($('.input-text qty').val()){
         console.log($('.input-text qty').val());
         let cart_quantity = $('.input-text qty').val();
@@ -37,6 +36,6 @@
             }
         }
     })
-  })
+  }
 
 </script>

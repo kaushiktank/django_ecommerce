@@ -81,6 +81,7 @@ def product_details(request, product_id):
 @login_required(login_url='users:login_user')
 def add_to_cart(request):
     if request.method =="POST":
+        print('view called')
         form = CartForm(request.POST)
         print("form is assigned")
         if form.is_valid():

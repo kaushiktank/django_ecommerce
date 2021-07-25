@@ -13,7 +13,7 @@ urlpatterns = [
     path('shop/category/', first_category, name='all_category'),
     path('shop/category/<int:category_id>/', filter_category, name='filter_by_category'),
     path('shop/product/<int:product_id>', product_details, name='product_details'),
-    path('addcart/', add_to_cart, name="add_to_cart"),
+    path('addcart/', add_to_cart, name='add_to_cart'),
     path('search/', get_search_results, name='get_search_results')
 ]
 
