@@ -1,9 +1,9 @@
 from django.http.response import JsonResponse
 from products.forms import CartForm
-from typing import get_type_hints
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from .models import Cart, Products, ProductCategory, ProductSubCategory, ProdBrand
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 # from .forms import FilterByBrandAndPrice
 
 
@@ -86,11 +86,10 @@ def add_to_cart(request):
         print("form is assigned")
         if form.is_valid():
             print("for is valid")
-            user_id = request.POST['user_id']
+            user_id = User.objects.get(id=request.user.id).id
             product_id = request.POST['product_id']
             cart_quantity = request.POST['cart_quantity']
-            cart_obj = Cart(user_id = user_id, product_id = product_id, cart_quantity = cart_quantity)
-            cart_obj.save()
+            Cart.objects.create(user_id = user_id, product_id = product_id, cart_quantity = cart_quantity)
             return JsonResponse({'status':'save'})
         else:
             return JsonResponse({'status':0})

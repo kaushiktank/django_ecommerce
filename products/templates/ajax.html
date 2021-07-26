@@ -1,10 +1,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
   console.log("file included");
-  function addToCart(prod_id, usr_id){
+  function addToCart(prod_id){
     console.log("button cicked");
     let product_id = prod_id;
-    let user_id = usr_id;
     if ($('.input-text qty').val()){
         console.log($('.input-text qty').val());
         let cart_quantity = $('.input-text qty').val();
@@ -13,11 +12,9 @@
     }
     let csr = $("input[name=csrfmiddlewaretoken]").val();
     console.log(product_id);
-    console.log(user_id);
     console.log(cart_quantity);
 
     cart = {
-        user_id:user_id,
         product_id:product_id,
         cart_quantity:cart_quantity,
         csrfmiddlewaretoken:csr,
