@@ -1,10 +1,11 @@
+from django.contrib.auth import models
+from users.models import Address
 from django.http.response import JsonResponse
-from products.forms import CartForm
+from products.forms import CartForm, OrdersForm
 from django.shortcuts import render
 from .models import Cart, Products, ProductCategory, ProductSubCategory, ProdBrand
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-# from .forms import FilterByBrandAndPrice
 
 
 def get_brands_count():
@@ -81,15 +82,10 @@ def product_details(request, product_id):
 @login_required(login_url='users:login_user')
 def add_to_cart(request):
     if request.method =="POST":
-        print('view called')
         form = CartForm(request.POST)
-        print("form is assigned")
         if form.is_valid():
             print("for is valid")
-            user_id = User.objects.get(id=request.user.id).id
-            product_id = request.POST['product_id']
-            cart_quantity = request.POST['cart_quantity']
-            Cart.objects.create(user_id = user_id, product_id = product_id, cart_quantity = cart_quantity)
+            form.save()
             return JsonResponse({'status':'save'})
         else:
             return JsonResponse({'status':0})
@@ -135,6 +131,7 @@ def filter_category(request, category_id):
 
 def get_cart_details(request):
     cart = Cart.objects.filter(user_id = request.user.id)
+    address = Address.objects.filter(user_id = request.user.id)[0]
     cart_product = []
     for id in cart:
         cart_product.append(Products.objects.filter(id = id.product_id)[0])
@@ -155,5 +152,30 @@ def get_cart_details(request):
         gst = gst + ( 0.18 * n['total_price'])
 
     grand_total = gst + sub_total
-    context = {'cart_product':cart_product, 'cart':cart, 'cart_price':cart_price, 'grand_total':grand_total,'gst':gst, 'sub_total':sub_total}
+    context = {'cart_product':cart_product, 'cart':cart, 'cart_price':cart_price, 'grand_total':grand_total,'gst':gst, 'sub_total':sub_total, 'address':address}
     return render(request, 'cart.html', context)
+
+
+def confirmation(request):
+    if request.method == 'POST':
+        form = OrdersForm(request.POST)
+        print('form is assigned')
+        print(form)
+        user_id = request.POST.get('user_id')
+        product_id = request.POST.get('product_id')
+        quantity = request.POST.get('quantity')
+        address = request.POST.get('address')
+        mobile = request.POST.get('mobile')
+        print('user_id: ' +user_id+ ' product_id: ' +product_id+ ' quantity: ' +quantity+ ' address: '+address+' mobile: '+mobile)
+        # form.save()
+
+        # if form.is_valid():
+        #     print('form is validetes')
+        #     form.save()
+
+            # sent an email here
+            # delete recoard in cart
+        cart = Cart.objects.filter(user_id = request.user.id)
+        cart.delete()
+
+    return render (request, 'confirmation.html')

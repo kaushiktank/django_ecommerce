@@ -55,6 +55,12 @@ def user_profile(request):
 
 
 def edit_user_profile(request):
+    # try to implement with multiple forms
+
+    # mobile_form = UserMobileNo.objects.filter(user_id = request.user.id)
+    # address_form = Address.objects.filter(user_id = request.user.id)
+    
+
     try:
         mobile = UserMobileNo.objects.filter(user_id = request.user.id)[0]
     except:
@@ -81,17 +87,21 @@ def edit_user_profile(request):
         zip_code = request.POST.get('zipcode')
         country = request.POST.get('country')
 
-        try:
-            mobile = UserMobileNo.objects.filter(user_id = request.user.id)
-            mobile.update(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number)
-        except:
-            UserMobileNo.objects.create(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number, user_id = request.user.id)
+        mobile = UserMobileNo.objects.filter(user_id = request.user.id)
+        print("Length of mobile number data: ", len(mobile))
+        print(mobile)
+        if len(mobile) >= 1:
+            mob_obj = mobile.update(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number)
+        else:
+            mob_obj = UserMobileNo.objects.create(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number, user_id = request.user.id)
 
-        try:
-            address = Address.objects.filter(user_id = request.user.id)
-            address.update(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country)
-        except:
-            Address.objects.create(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country, user_id = request.user.id)
+        address = Address.objects.filter(user_id = request.user.id)
+        print("Length of mobile number data: ", len(mobile))
+        print(mobile)
+        if len(address) >= 1:
+            adr_obj = address.update(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country)
+        else:
+            adr_obj = Address.objects.create(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country, user_id = request.user.id)
 
         return redirect('users:user_profile')
 

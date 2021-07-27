@@ -1,7 +1,7 @@
+from users.models import Address, UserMobileNo
 from django.db import models
 from django.db.models.deletion import CASCADE
 from django.contrib.auth.models import User
-
 
 class ProductCategory(models.Model):
     main_category = models.CharField(max_length=255)
@@ -44,3 +44,12 @@ class Cart(models.Model):
     product_id = models.IntegerField()
     cart_quantity = models.IntegerField(default=1)
 
+
+class Orders(models.Model):
+    user_id = models.ForeignKey(User, on_delete=CASCADE)
+    product_id = models.ForeignKey(Products, on_delete=CASCADE)
+    quantity = models.IntegerField()
+    address = models.ForeignKey(Address, on_delete=CASCADE)
+    mobile = models.ForeignKey(UserMobileNo, on_delete=CASCADE)
+    order_date_time = models.TimeField(auto_now=True)
+    order_status = models.CharField(max_length=150, null=True)

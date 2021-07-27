@@ -33,7 +33,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <form action={% url 'products:confirmation' %} method="post">
+                                {% csrf_token %}
                             {% for product in cart_product %}
+                            <input type="text" hidden value={{ product.id }} name="product_id">
+                            <input type="text" hidden value={{ request.user.id }} name="user_id">
+                            <input type="text" hidden value={{ address.id }} name="address">
+                            <input type="text" hidden value={{ mobile.id }} name="mobile">
                             <tr>
                                 <td>
                                     <div class="media">
@@ -52,7 +58,7 @@
                                 {% if cart_price.cart_id == product.id%}
                                     <td>
                                         <div class="product_count">
-                                            <input type="text" name="qty" id="sst" maxlength="12" value={{ cart_price.cart_quantity }} title="Quantity:"
+                                            <input type="text" name="quantity" id="sst" maxlength="12" value={{ cart_price.cart_quantity }} title="Quantity:"
                                                 class="input-text qty">
                                             <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
                                                 class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
@@ -90,6 +96,24 @@
 
                                 </td>
                                 <td>
+                                    
+                                </td>
+                                <td>
+                                    <h5>Address:</h5>
+                                </td>
+                                <td>
+                                    <h5>{{ address.address_line_1 }}, </h5>
+                                    <h5>{{ address.address_line_2 }}, </h5>
+                                    <h5>{{ address.city }}, {{ address.state }}, </h5>
+                                    <h5>{{ address.zip_code }}</h5>
+                                    <h5>{{ address.country }}</h5>
+                                </td>
+                            </tr>
+                            <tr class="out_button_area">
+                                <td>
+
+                                </td>
+                                <td>
 
                                 </td>
                                 <td>
@@ -97,11 +121,13 @@
                                 </td>
                                 <td>
                                     <div class="checkout_btn_inner d-flex align-items-center">
-                                        <a class="gray_btn" href={% url 'products:shoppage' %}>Continue Shopping</a>
-                                        <a class="primary-btn" href="#">Proceed to checkout</a>
+                                        <!-- <a class="gray_btn" href={% url 'products:shoppage' %}>Continue Shopping</a> -->
+                                        <button type="submit">Proceed to checkout</button>
+                                        <!-- <a class="primary-btn" href={% url 'products:confirmation' %}>Proceed to checkout</a> -->
                                     </div>
                                 </td>
                             </tr>
+                        </form>
                         </tbody>
                     </table>
                 </div>

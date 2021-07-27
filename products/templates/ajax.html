@@ -1,38 +1,39 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
   console.log("file included");
-  function addToCart(prod_id){
+  $("#add_to_cart").click(function () {
     console.log("button cicked");
-    let product_id = prod_id;
-    if ($('.input-text qty').val()){
-        console.log($('.input-text qty').val());
-        let cart_quantity = $('.input-text qty').val();
-    }else{
-        cart_quantity = 1
+    let product_id = ($('#product_id').attr('value'));
+    let user_id = ($('#user_id').attr('value'));
+    if ($(".input-text qty").val()) {
+      console.log($(".input-text qty").val());
+      let cart_quantity = $(".input-text qty").val();
+    } else {
+      cart_quantity = 1;
     }
     let csr = $("input[name=csrfmiddlewaretoken]").val();
     console.log(product_id);
+    console.log(user_id);
     console.log(cart_quantity);
 
     cart = {
-        product_id:product_id,
-        cart_quantity:cart_quantity,
-        csrfmiddlewaretoken:csr,
+      product_id: product_id,
+      user_id: user_id,
+      cart_quantity: cart_quantity,
+      csrfmiddlewaretoken: csr,
     };
     $.ajax({
-        url: "{% url 'products:add_to_cart' %}",
-        method:"POST",
-        data:cart,
-        success:function(data){
-            if (data.status == 'save'){
-                console.log("saved");
-            }
-            else{
-                console.log("error");
-                console.log(data);
-            }
+      url: "{% url 'products:add_to_cart' %}",
+      method: "POST",
+      data: cart,
+      success: function (data) {
+        if (data.status == "save") {
+          console.log("saved");
+        } else {
+          console.log("error");
+          console.log(data);
         }
-    })
-  }
-
+      },
+    });
+  });
 </script>
