@@ -1,3 +1,5 @@
+from typing import List
+from django.http import request
 from products.tasks import send_order_email_task
 from django.contrib.auth import models
 from django.forms.utils import pretty_name
@@ -8,6 +10,7 @@ from django.shortcuts import redirect, render
 from .models import Cart, Products, ProductCategory, ProductSubCategory, ProdBrand
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.views.generic import ListView
 
 
 def get_brands_count():
@@ -56,21 +59,52 @@ def shop_page(request):
     return render(request, 'shop.html', context)
 
 
-def first_brands(request):
-    brand_product = get_brands_count()
-    products = Products.objects.filter(prod_brand=brand_product[0]['brand_id'])[:20]
-    brand_name = brand_product[0]['brand_name']
-    context = {'brand_product':brand_product,'products':products, 'brand_name':brand_name}
-    return render(request, 'shop_brand.html', context)
+# def first_brands(request):
+#     brand_product = get_brands_count()
+#     products = Products.objects.filter(prod_brand=brand_product[0]['brand_id'])[:20]
+#     brand_name = brand_product[0]['brand_name']
+#     context = {'brand_product':brand_product,'products':products, 'brand_name':brand_name}
+#     return render(request, 'shop_brand.html', context)
+
+class FirstBrand(ListView):
+    model = ProdBrand
+    template_name = 'shop_brand.html'
+    context_object_name = 'brand_product'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product_brand = ProdBrand.objects.all()
+        print(product_brand)
+        context["products"] = Products.objects.filter(prod_brand=product_brand[0].id)[:20]
+        context['brand_name'] = product_brand[0].brand
+        print(context)
+        return context
+    
+
+class ShopBrand(ListView):
+    model = ProdBrand
+    template_name = 'shop_brand.html'
+    context_object_name = 'brand_product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        print("Brand ID: ",self.kwargs.brand_id)
+        prod = Products.objects.filter(prod_brand_id = self.kwargs.brand_id)
+        if len(prod) >= 1:
+            context["products"] = prod
+        else:
+            context['custom_message'] = "No Data Found"
+
+        return context
 
 
-def shop_brand(request, brand_id):
-    products = Products.objects.filter(prod_brand_id = brand_id)[:20]
-    if len(products) >= 1:
-        context = {'brand_product':get_brands_count(), 'products':products}
-    else:
-        context = {'brand_product':get_brands_count(), 'custom_message':"No Data Found"}
-    return render(request, 'shop_brand.html', context)
+# def shop_brand(request, brand_id):
+#     products = Products.objects.filter(prod_brand_id = brand_id)[:20]
+#     if len(products) >= 1:
+#         context = {'brand_product':get_brands_count(), 'products':products}
+#     else:
+#         context = {'brand_product':get_brands_count(), 'custom_message':"No Data Found"}
+#     return render(request, 'shop_brand.html', context)
 
 
 def product_details(request, product_id):
@@ -93,24 +127,37 @@ def add_to_cart(request):
             return JsonResponse({'status':0})
 
 
-def get_search_results(request):
-    product_category = ProductCategory.objects.all()
-    if request.method =='POST':       
+
+class GetSearchResult(ListView):
+    queryset = ProductCategory.objects.all()
+    template_name = 'search_result.html'
+    context = {}
+    context['product_category'] = queryset
+    context['custom_messages'] = "Make your Search"
+
+    def post(self, request, *args, **kwargs):
         search_query = request.POST['search']
+        print('post methoad is identfyed')
         try:
-            category_id = request.POST['dropdown']
-            search_result = Products.objects.filter(prod_category_id = category_id ,prod_name__contains = search_query)[:20]
+            if request.POST['dropdown']:
+                category_id = request.POST['dropdown']
+                self.context["products"] = Products.objects.filter(prod_category_id = category_id ,prod_name__contains = search_query)[:20]
         except:
-            search_result = Products.objects.filter(prod_name__contains = search_query)[:20]
+            self.context['products'] = Products.objects.filter(prod_name__contains = search_query)[:20]
+        
+        if len(self.context['products']) == 0:
+            self.context['custom_messages'] = 'No Data Found'
 
-        if len(search_result) >= 1:
-            context = {'products':search_result, 'product_category':product_category}
-        else:
-            context = {'product_category':product_category, 'custom_messages':"Data Not Found"}    
-    else:
-        context = {'product_category':product_category, 'custom_messages':"Make your Search"}
+        return render(request, 'search_result.html', self.context)
 
-    return render(request, 'search_result.html', context)
+        
+    
+    # queryset = ProductCategory.objects.all()
+    # context_object_name = 'product_category'
+    # if request.method == 'POST':
+    #     context['products'] = ""
+
+
 
 
 def first_category(request):

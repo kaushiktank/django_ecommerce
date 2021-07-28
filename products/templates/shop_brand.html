@@ -24,8 +24,8 @@
 					<div class="head">Browse Categories</div>
 					<ul class="main-categories">
 						{% for brand in brand_product %}
-						<li class="main-nav-list"><a href={% url 'products:filter_by_brand' brand.brand_id %}><span
-								 class="lnr lnr-arrow-right"></span>{{brand.brand_name}}<span class="number">({{ brand.product_count }})</span></a>
+						<li class="main-nav-list"><a href={% url 'products:filter_by_brand' brand.id %}><span
+								 class="lnr lnr-arrow-right"></span>{{brand.brand}}<span class="number">({{ brand.product_count }})</span></a>
 						</li>
 						{% endfor %}						
 					</ul>
