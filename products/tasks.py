@@ -6,6 +6,6 @@ from .email import send_order_email
 logger = get_task_logger(__name__)
 
 @task(name="send_order_email_task")
-def send_order_email_task(name, email, order):
+def send_order_email_task(name, email, order, email_file):
     logger.info("Sent order email")
-    return send_order_email(name, email, order)
+    return send_order_email(name, email, order, email_file)

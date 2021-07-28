@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+from . import env_variable
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -127,3 +129,12 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = env_variable.EMAIL_BACKEND
+EMAIL_HOST = env_variable.EMAIL_HOST
+EMAIL_HOST_USER = env_variable.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = env_variable.EMAIL_HOST_PASSWORD
+EMAIL_PORT = env_variable.EMAIL_PORT
+EMAIL_USE_TLS = env_variable.EMAIL_USE_TLS
+DEFAULT_FORM_EMAIL = env_variable.DEFAULT_FORM_EMAIL

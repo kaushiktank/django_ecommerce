@@ -1,8 +1,10 @@
+from products.tasks import send_order_email_task
 from django.contrib.auth import models
+from django.forms.utils import pretty_name
 from users.models import Address
 from django.http.response import JsonResponse
 from products.forms import CartForm, OrdersForm
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import Cart, Products, ProductCategory, ProductSubCategory, ProdBrand
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -130,6 +132,7 @@ def filter_category(request, category_id):
 
 
 def get_cart_details(request):
+
     cart = Cart.objects.filter(user_id = request.user.id)
     address = Address.objects.filter(user_id = request.user.id)[0]
     cart_product = []
@@ -142,7 +145,6 @@ def get_cart_details(request):
         d['total_price'] = (cart_product[x].prod_price) * (cart[x].cart_quantity)
         d['cart_quantity'] = cart[x].cart_quantity
         d['cart_id'] = cart_product[x].id
-        print(d)
         cart_price.append(d)
 
     sub_total = 0
@@ -157,16 +159,32 @@ def get_cart_details(request):
 
 
 def confirmation(request):
-    if request.method == 'POST':
-        form = OrdersForm(request.POST)
-        print('form is assigned')
-        print(form)
-        user_id = request.POST.get('user_id')
-        product_id = request.POST.get('product_id')
-        quantity = request.POST.get('quantity')
-        address = request.POST.get('address')
-        mobile = request.POST.get('mobile')
-        print('user_id: ' +user_id+ ' product_id: ' +product_id+ ' quantity: ' +quantity+ ' address: '+address+' mobile: '+mobile)
+    cart = Cart.objects.filter(user_id = request.user.id)[0]
+    print('cart is assigned')
+    def sent_email():
+        print("sent function is called")
+        name = request.user.username
+        email = request.user.email
+        product = Products.objects.filter(id = cart.product_id)[0]
+        order = product.prod_name
+        if product.quantity >= cart.cart_quantity:
+            email_file = 'email_message_avaliable.html'
+        else:
+            email_file = 'email_message.html'
+        send_order_email_task.delay(name, email, order, email_file)
+
+    sent_email()
+
+    # if request.method == 'POST':
+    #     form = OrdersForm(request.POST)
+    #     print('form is assigned')
+    #     print(form)
+    #     user_id = request.POST.get('user_id')
+    #     product_id = request.POST.get('product_id')
+    #     quantity = request.POST.get('quantity')
+    #     address = request.POST.get('address')
+    #     mobile = request.POST.get('mobile')
+    #     print('user_id: ' +user_id+ ' product_id: ' +product_id+ ' quantity: ' +quantity+ ' address: '+address+' mobile: '+mobile)
         # form.save()
 
         # if form.is_valid():
@@ -175,7 +193,7 @@ def confirmation(request):
 
             # sent an email here
             # delete recoard in cart
-        cart = Cart.objects.filter(user_id = request.user.id)
-        cart.delete()
+        # cart = Cart.objects.filter(user_id = request.user.id)
+        # cart.delete()
 
     return render (request, 'confirmation.html')
