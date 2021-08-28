@@ -33,7 +33,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <form action='' method="POST">
+                                {% csrf_token %}
                             {% for product in cart_product %}
+                            <input type="text" hidden value={{ product.id }} name="product_id">
+                            <input type="text" hidden value={{ request.user.id }} name="user_id">
+                            <input type="text" hidden value={{ address.id }} name="address">
+                            <input type="text" hidden value={{ mobile.id }} name="mobile">
                             <tr>
                                 <td>
                                     <div class="media">
@@ -114,12 +120,16 @@
 
                                 </td>
                                 <td>
+                                    <form>
                                     <div class="checkout_btn_inner d-flex align-items-center">
                                         <a class="gray_btn" href={% url 'products:shoppage' %}>Continue Shopping</a>
-                                        <a class="primary-btn" href={% url 'products:confirmation' %}>Proceed to checkout</a>
+                                        <button class="primary-btn" type="submit">Proceed to checkout</button>
+                                        <!-- <a class="primary-btn" href={% url 'products:confirmation' %}>Proceed to checkout</a> -->
                                     </div>
+                                </form>
                                 </td>
                             </tr>
+                        </form>
                         </tbody>
                     </table>
                 </div>

@@ -24,8 +24,8 @@
 					<div class="head">Browse Categories</div>
 					<ul class="main-categories">
 						{% for brand in brand_product %}
-						<li class="main-nav-list"><a href={% url 'products:filter_by_brand' brand.brand_id %}><span
-								 class="lnr lnr-arrow-right"></span>{{brand.brand_name}}<span class="number">({{ brand.product_count }})</span></a>
+						<li class="main-nav-list"><a href={% url 'products:filter_by_brand' brand.id %}><span
+								 class="lnr lnr-arrow-right"></span>{{brand.brand}}<span class="number">({{ brand.product_count }})</span></a>
 						</li>
 						{% endfor %}						
 					</ul>
@@ -56,7 +56,7 @@
 											<div class="prd-bottom">
 												<label value={{ product.id }} id="product_id"></label>
 												<label value={{ request.user.id }} id="user_id"></label>
-												<a id="add_to_cart" class="social-info" onclick="addToCart({{ product.id }},{{ request.user.id }})">
+												<a id="add_to_cart" class="social-info" >
 													<span class="ti-bag"></span>
 													<p class="hover-text">add to bag</p>
 												</a>

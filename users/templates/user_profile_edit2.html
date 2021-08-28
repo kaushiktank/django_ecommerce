@@ -1,0 +1,142 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>{{ request.user.username }} Edit Profile</h1>
+					<nav class="d-flex align-items-center">
+						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
+						<!-- <a href=""></a> -->
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+    <section class="checkout_area section_gap">
+        <div class="container">
+            <div class="billing_details">
+                <div class="row">
+					<h3>Edit Profile</h3>
+					<div class="table-responsive">
+						<form method="POST" action="">
+						<table class="table">
+							{% csrf_token %}
+							<tbody>
+								<tr>
+									<td>
+										<p>User Name: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ request.user.username }}" class="form-control" id="username" name="username">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>First Name: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ request.user.first_name }}" class="form-control" id="first_name" name="first_name">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Last Name: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ request.user.last_name }}" class="form-control" id="last_name" name="last_name">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Email: </p>
+									</td>
+									<td>
+										<input disabled value="{{ request.user.email }}" type="text" class="form-control" id="email" name="email">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Mobile number: </p>
+									</td>
+									<td>
+										<input type="number" value="{{ mobile.mobile_number }}" class="form-control" id="mobile_number" name="mobile_number">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Alternative Mobile Number: </p>
+									</td>
+									<td>
+										<input type="num" value="{{ mobile.alternative_mobile_number }}" class="form-control" id="alternative_mobile" name="alternative_mobile">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Address Line 1: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ address.address_line_1 }}" class="form-control" id="address_line_1" name="address_line_1">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Address Line 2: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ address.address_line_1 }}" class="form-control" id="address_line_2" name="address_line_2">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>City: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ address.city }}" class="form-control" id="city" name="city">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>State: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ address.state }}" class="form-control" id="state" name="state">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Zipcode: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ address.zip_code }}" class="form-control" id="zipcode" name="zipcode">
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p>Country: </p>
+									</td>
+									<td>
+										<input type="text" value="{{ address.country }}" class="form-control" id="country" name="country">
+									</td>
+								</tr>
+								<tr>
+									<td>
+									</td>
+									<td>
+										<input type="submit" value="Update Details" class="form-control btn btn-primary">
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock content %}

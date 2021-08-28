@@ -58,7 +58,9 @@
 											<h6><i class="fa fa-inr" aria-hidden="true"></i> {{ product.prod_price }}</h6>
 										</div>
 										<div class="prd-bottom">
-											<a href="" class="social-info">
+											<label value={{ product.id }} id="product_id"></label>
+											<label value={{ request.user.id }} id="user_id"></label>
+											<a id="add_to_cart" class="social-info">
 												<span class="ti-bag"></span>
 												<p class="hover-text">add to bag</p>
 											</a>
