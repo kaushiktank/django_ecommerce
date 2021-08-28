@@ -74,10 +74,10 @@ class FirstBrand(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         product_brand = ProdBrand.objects.all()
-        print(product_brand)
+        # print(product_brand)
         context["products"] = Products.objects.filter(prod_brand=product_brand[0].id)[:20]
         context['brand_name'] = product_brand[0].brand
-        print(context)
+        # print(context)
         return context
     
 
@@ -88,7 +88,7 @@ class ShopBrand(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print("Brand ID: ",self.kwargs.brand_id)
+        # print("Brand ID: ",self.kwargs.brand_id)
         prod = Products.objects.filter(prod_brand_id = self.kwargs.brand_id)
         if len(prod) >= 1:
             context["products"] = prod
@@ -108,7 +108,7 @@ class ShopBrand(ListView):
 
 
 def product_details(request, product_id):
-    print("product category")
+    # print("product category")
     product_details = Products.objects.filter(id = product_id)
     product_category = ProductCategory.objects.filter(id = product_details[0].prod_category_id)[0]
     context = {'product_details':product_details, 'product_category':product_category}
@@ -120,7 +120,7 @@ def add_to_cart(request):
     if request.method =="POST":
         form = CartForm(request.POST)
         if form.is_valid():
-            print("for is valid")
+            # print("for is valid")
             form.save()
             return JsonResponse({'status':'save'})
         else:
@@ -137,7 +137,7 @@ class GetSearchResult(ListView):
 
     def post(self, request, *args, **kwargs):
         search_query = request.POST['search']
-        print('post methoad is identfyed')
+        # print('post methoad is identfyed')
         try:
             if request.POST['dropdown']:
                 category_id = request.POST['dropdown']
@@ -207,9 +207,9 @@ def get_cart_details(request):
 
 def confirmation(request):
     cart = Cart.objects.filter(user_id = request.user.id)[0]
-    print('cart is assigned')
+    # print('cart is assigned')
     def sent_email():
-        print("sent function is called")
+        # print("sent function is called")
         name = request.user.username
         email = request.user.email
         product = Products.objects.filter(id = cart.product_id)[0]
