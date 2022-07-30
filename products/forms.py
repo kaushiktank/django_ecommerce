@@ -11,4 +11,4 @@ class OrdersForm(forms.ModelForm):
     
     class Meta:
         model = Orders
-        fields = ('user_id','product_id','quantity','address','mobile')
+        fields = ('user_id','total_amount','address', 'order_status')

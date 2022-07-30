@@ -131,7 +131,6 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EMAIL_BACKEND = env_variable.EMAIL_BACKEND
 EMAIL_HOST = env_variable.EMAIL_HOST
 EMAIL_HOST_USER = env_variable.EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = env_variable.EMAIL_HOST_PASSWORD

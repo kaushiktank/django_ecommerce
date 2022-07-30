@@ -1,22 +1,43 @@
-from users.models import Address, UserMobileNo
+from csv import unregister_dialect
+from users.models import Address, UserDetails, Plans
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
+from django.utils.encoding import force_bytes
+
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+
+# from django_ecommerce import custom_decorators
 
 from .forms import CreateUserForm
+import uuid
 
 
 def login_page(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('products:homepage')
-        else:
-            messages.info(request, 'Username or Password is incurrect ')
+        print(username +" : "+ password)
+        try:
+            user_details = UserDetails.objects.get(user_name = username)
+            print(user_details)
+            if user_details.verification == True:
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    login(request, user)
+                    return redirect('products:homepage')
+                else:
+                    messages.info(request, 'Username or Password is incorrect ')
+            
+            elif user_details.verification == False:
+                return render(request, 'login_email_verification.html', {'messages': ["Your email is not verified, Please resend the link and try again."], 'resend_email': True})
+        except:
+            return render(request, 'login.html', {"messages": ['Username is not registered']})
 
     content = {}
     return render(request, 'login.html', content)
@@ -27,14 +48,95 @@ def logout_page(request):
     return redirect('users:login_user')
 
 
-def register_page(request):
-    form = CreateUserForm()
+def verification(request, token):
+    if request.user.is_authenticated:
+        return redirect('products:homepage')
+    if token:
+        try:
+            user_details = UserDetails.objects.get(verification_token=token)
+            print(user_details)
+            print("user_details.user_id: ", user_details.user_id)
+            # user = User.objects.get(username=user_details.user_id)
+            print(user_details.verification)
+            decoded_token = str(urlsafe_base64_decode(token))
+            print("decoded_token: ", decoded_token)
+            if str(user_details.user_id) in decoded_token and user_details.verification == False:
+                user_details.verification = True
+                user_details.save()
+                return render(request, 'login_email_verification.html', {'messages': ["Your Email is verified, Please login"]})
+            elif user_details.verification == True:
+                return render(request, 'login_email_verification.html', {'messages': ["Your Email is Already verified"]})
+            else:
+                return render(request, 'login_email_verification.html', {'messages': ["Your email is not verified, Please resend the link and try again."], 'resend_email': True})
+        except:
+            return render(request, 'resend_verification_email.html', {'messages': ["Token is expired please resend the token and try to verify your email."]})
 
+
+def resend_verification(request):
+    if request.user.is_authenticated:
+        return redirect('products:homepage')
+
+    if request.method == 'POST':
+        email = request.POST.get('user_email')
+        print(email)
+        try:
+            user = User.objects.get(email=email)
+            if user:
+                current_site = get_current_site(request)
+                uid = str(uuid.uuid4()) + str(user.username)
+                print("uid: ", uid)
+                token = urlsafe_base64_encode(force_bytes(uid))
+                verification_link = 'https://' + current_site.domain + '/user/verification/' + token + '/'
+                user_details = UserDetails.objects.get(user_id=user)
+                print("user details: ", user_details)
+                user_details.verification_token = token
+                user_details.save()
+
+                # Send the email with new link
+                subject = 'Thank you for registration, Please verify your email address'
+                html_message = render_to_string('email_verification.html', {'verification_link': verification_link, 'username': user.username})
+                plain_message = strip_tags(html_message)
+                from_email = 'Django-eCommerce <pragnakalpdjango@gmail.com>'
+                to = [user.email]
+
+                send_mail(subject, plain_message, from_email, to, html_message=html_message)
+
+                return render(request, 'resend_verification_email.html', {'messages':['Email is send please check your inbox and also spam']})
+        except:
+            return render(request, 'resend_verification_email.html', {'messages':['Email is not registered']})
+
+    return render(request, 'resend_verification_email.html')
+
+def register_page(request):
+    if request.user.is_authenticated:
+        return redirect('products:homepage')
+
+    form = CreateUserForm()
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('users:login_user')
+            context = form.cleaned_data
+            user_details = User.objects.filter(username = context['username'], email = context['email'])[0]
+            plans_details = Plans.objects.all()
+            # Create verifications link 
+            current_site = get_current_site(request)
+            uid = str(uuid.uuid4()) + str(context['username'])
+            token = urlsafe_base64_encode(force_bytes(uid))
+            verification_link = 'https://' + current_site.domain + '/user/verification/' + token + '/'
+            UserDetails.objects.create(user_id=user_details, user_name=context['username'], plan = plans_details[0], verification=False, verification_token=token)
+
+            # Send verification email notification
+            subject = 'Thank you for registration, Please verify your email address'
+            html_message = render_to_string('email_verification.html', {'verification_link': verification_link, 'username': context['username']})
+            plain_message = strip_tags(html_message)
+            from_email = 'Django-eCommerce <pragnakalpdjango@gmail.com>'
+            to = [context['email']]
+
+            send_mail(subject, plain_message, from_email, to, html_message=html_message)
+            # return redirect('users:login_user')
+            return render(request, 'login.html', {'messages': ["Email Verification Email Send Please verify your email and login."]})
+
 
     content = {'form': form}
     return render(request, 'register.html', content)

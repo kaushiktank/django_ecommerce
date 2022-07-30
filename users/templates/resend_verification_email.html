@@ -1,0 +1,48 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+
+<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Login</h1>
+					<nav class="d-flex align-items-center">
+						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href={% url 'users:login_user' %}>Login</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Form Box Area =================-->
+	<section class="login_box_area section_gap">
+		<div class="container">
+			<div class="login_form_inner">
+				<h3>Your Email ID</h3>
+				<form class="row login_form" action={% url 'users:resend_verification' %} method="POST">
+					{% csrf_token %}
+					<div class="col-md-12 form-group">
+						<input type="email" class="form-control" id="email" name="user_email" placeholder="Your Email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Email'">
+					</div>
+					<div class="col-md-12 form-group">
+						<button type="submit" value="submit" class="primary-btn">Resend Verification Email</button>		
+					</div>
+				</form>
+
+				{% for message in messages %}
+					<p id='messages'>{{message}}</p>
+				{% endfor %}
+
+				<label >Don't have an account <a href={% url 'users:register' %}>Register here</a></label>
+			</div>
+		</div>
+
+	</section>
+	<!--================End Login Box Area =================-->
+
+{% endblock content %}

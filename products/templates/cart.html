@@ -34,11 +34,12 @@
                         </thead>
                         <tbody>
                             {% for product in cart_product %}
+
                             <tr>
                                 <td>
                                     <div class="media">
                                         <div class="d-flex">
-                                            <img src={{ product.prod_images.url }} alt="" style="height: 2cm; width: 2cm;">
+                                            <img src={{ product.prod_images }} alt="" style="height: 2cm; width: 2cm;">
                                         </div>
                                         <div class="media-body">
                                             <p>{{ product.prod_name }}</p>
@@ -48,23 +49,27 @@
                                 <td>
                                     <h5><i class="fa fa-inr" aria-hidden="true"></i> {{ product.prod_price }}</h5>
                                 </td>
-                                {% for cart_price in cart_price %}
-                                {% if cart_price.cart_id == product.id%}
-                                    <td>
+                                <td>
+                                    <h5> {{ product.cart_quantity }}</h5>
+                                </td>
+                                <td>
+                                    <h5> {{ product.total_price }}</h5>
+                                </td>
+                                <!-- {% if product.cart_id == product.id %} -->
+                                    <!-- <td>
                                         <div class="product_count">
-                                            <input type="text" name="quantity" id="sst" maxlength="12" value={{ cart_price.cart_quantity }} title="Quantity:"
+                                            <input type="text" name="quantity" id="sst" maxlength="12" value={{ product.cart_quantity }} title="Quantity:"
                                                 class="input-text qty">
                                             <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
                                                 class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
                                             <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
                                                 class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <h5><i class="fa fa-inr" aria-hidden="true"></i>{{cart_price.total_price}}</h5>
-                                    </td>
-                                {% endif %}
-                                {% endfor %}
+                                    </td> -->
+                                    <!-- <td>
+                                        <h5><i class="fa fa-inr" aria-hidden="true"></i>{{product.total_price}}</h5>
+                                    </td> -->
+                                <!-- {% endif %} -->
                             </tr>
                             {% endfor %}
                             <tr>
@@ -116,7 +121,7 @@
                                 <td>
                                     <div class="checkout_btn_inner d-flex align-items-center">
                                         <a class="gray_btn" href={% url 'products:shoppage' %}>Continue Shopping</a>
-                                        <a class="primary-btn" href={% url 'products:confirmation' %}>Proceed to checkout</a>
+                                        <a class="primary-btn" href={% url 'products:conformation' %}>Proceed to checkout</a>
                                     </div>
                                 </td>
                             </tr>
