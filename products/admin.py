@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Cart, OrderItems, Orders, ProdBrand, ProductCategory, ProductSubCategory, Products
 
+# To Display the table in Admin panel
 class ProductsAdmin(admin.ModelAdmin):
     list_display = ('prod_name','prod_brand','prod_price','quantity')
 
@@ -23,3 +24,6 @@ admin.site.register(ProductSubCategory)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(OrderItems)
 admin.site.register(Orders)
+
+
+admin.site.site_header = 'Django eCommerce Admin'

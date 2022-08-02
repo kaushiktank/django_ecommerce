@@ -1,5 +1,7 @@
 from csv import unregister_dialect
-from users.models import Address, UserDetails, Plans
+from multiprocessing.dummy import active_children
+import re
+from users.models import Address, UserDetails, Plans, UserPlans
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -16,6 +18,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from .forms import CreateUserForm
 import uuid
+import datetime
 
 
 def login_page(request):
@@ -99,13 +102,14 @@ def resend_verification(request):
                 from_email = 'Django-eCommerce <pragnakalpdjango@gmail.com>'
                 to = [user.email]
 
-                send_mail(subject, plain_message, from_email, to, html_message=html_message)
+                # send_mail(subject, plain_message, from_email, to, html_message=html_message)
 
                 return render(request, 'resend_verification_email.html', {'messages':['Email is send please check your inbox and also spam']})
         except:
             return render(request, 'resend_verification_email.html', {'messages':['Email is not registered']})
 
     return render(request, 'resend_verification_email.html')
+
 
 def register_page(request):
     if request.user.is_authenticated:
@@ -117,14 +121,25 @@ def register_page(request):
         if form.is_valid():
             form.save()
             context = form.cleaned_data
-            user_details = User.objects.filter(username = context['username'], email = context['email'])[0]
-            plans_details = Plans.objects.all()
+            user = User.objects.filter(username = context['username'], email = context['email'])[0]
+
+            # Activate default plans for new users
+            try:
+                plan = Plans.objects.get(is_default = True)
+                # print("PLANS DETAILS: ", plan)
+                # print(plan.durations)
+                activated_date = datetime.datetime.now()
+                expire_date = activated_date + datetime.timedelta(days=int(int(plan.durations)*30.417))
+                UserPlans.objects.create(user_id = user, plan=plan, price = plan.price, active = True, 
+                                        activated_date = str(activated_date), expire_date = str(expire_date))
+            except:
+                pass
             # Create verifications link 
             current_site = get_current_site(request)
             uid = str(uuid.uuid4()) + str(context['username'])
             token = urlsafe_base64_encode(force_bytes(uid))
             verification_link = 'https://' + current_site.domain + '/user/verification/' + token + '/'
-            UserDetails.objects.create(user_id=user_details, user_name=context['username'], plan = plans_details[0], verification=False, verification_token=token)
+            UserDetails.objects.create(user_id=user, user_name=context['username'], verification=False, verification_token=token)
 
             # Send verification email notification
             subject = 'Thank you for registration, Please verify your email address'
@@ -140,6 +155,42 @@ def register_page(request):
 
     content = {'form': form}
     return render(request, 'register.html', content)
+
+
+def plans(request):
+    if request.user.is_authenticated:
+        user_plan = UserPlans.objects.get(user_id = request.user.id, active=True)
+        plans = Plans.objects.filter(active=True)
+        user_plan.activated_date = user_plan.activated_date.date()
+        user_plan.expire_date = user_plan.expire_date.date()
+        # print(user_plan.activated_date)
+        # print("DATE: ", user_plan.activated_date.date())
+        # print(type(user_plan.activated_date))
+
+        return render(request, 'available_plans.html', {'user_plan':user_plan, 'plans':plans, 'select':True})
+
+    plan_details = Plans.objects.filter(active=True)
+    plans = []    
+    for plan in plan_details:
+        plans.append(plan)
+    return render(request, 'available_plans.html', {'user_plan':plans})
+
+
+def update_plan(request):
+    if request.method == 'POST':
+        selected_plan = request.POST.get('plan')
+        current_plan = UserPlans.objects.get(active=True, user_id = request.user.id)
+        plan = Plans.objects.get(active=True, id=selected_plan)
+        activated_date = datetime.datetime.now()
+        expire_date = activated_date + datetime.timedelta(days=int(int(plan.durations)*30.417))
+        current_plan.plan = plan
+        current_plan.price = plan.price
+        current_plan.activated_date = str(activated_date)
+        current_plan.expire_date = str(expire_date)
+        current_plan.active = True
+        current_plan.save()
+
+    return redirect('users:plans')
 
 
 def user_profile(request):

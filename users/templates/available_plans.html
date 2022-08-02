@@ -1,0 +1,52 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+
+<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Plans Details</h1>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+	<!--================Login Box Area =================-->
+	<section class="login_box_area section_gap">
+		<div class="container">
+			<div class="login_form_inner">
+
+				{% if select %}
+				<h3 style="padding-bottom: 30px;">Current Plan: {{user_plan.plan}}</h3>
+				<h3 style="padding-bottom: 30px;">Activation Date: {{user_plan.activated_date}}</h3>
+				<h3 style="padding-bottom: 30px;">Expire Date: {{user_plan.expire_date}}</h3>
+				<h3 style="padding-bottom: 30px;">Price: {{user_plan.price}}</h3>
+
+
+				<form method="POST" action={% url 'users:update_plan' %} class="row login_form">
+					{% csrf_token %}
+					<select name="plan" class="form-control">
+					{% for plan in plans %}
+					<option value="{{ plan.id }}">{{ plan }}</option>
+					{% endfor %}
+					</select>
+					<button type="submit" value="submit" class="form-control">Change Plan</button>
+				</form>
+				{% else %}
+					{% for plan in user_plan %}
+					<h3 style="padding-bottom: 30px;">{{plan}}</h3>
+					{% endfor %}
+				{% endif %}
+
+
+			</div>
+		</div>
+
+	</section>
+	<!--================End Login Box Area =================-->
+
+{% endblock content %}

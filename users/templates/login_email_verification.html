@@ -41,7 +41,7 @@
 					<p id='messages'>{{message}}</p>
 				{% endfor %}
 				{% if resend_email %}
-				<label><a href=''>Resend Verification Link</a></label><br>
+				<label><a href={% url 'users:resend_verification' %}>Resend Verification Link</a></label><br>
 				{% endif %}
 				<label >Don't have an account <a href={% url 'users:register' %}>Register here</a></label>
 			</div>
