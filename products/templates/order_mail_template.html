@@ -41,5 +41,20 @@
             </td>
         </tr>
     </table>
+    <h3>Order details</h3>
+        <p>
+            Order number: {{ order.id }}<br>
+            Date: {{order.order_date_time}}<br>
+            Total: RS {{ order.total_amount }}<br>
+            Payment method:  Cash On Delivery<br>
+        </p>
+        <h3>Delivery Address</h3>
+        <p>
+            Street : {{address.address_line_1}}, {{ address.address_line_2 }} <br>
+            City : {{address.city}}, {{address.state}} <br>
+            Country : {{address.country}} <br>
+            Postcode : {{address.zip_code}} <br>
+            Mobile : {{address.mobile_number}}, {{address.alternative_mobile_number}} <br>
+        </p>
 </body>
 </html>

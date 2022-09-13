@@ -1,0 +1,39 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Add Address</h1>
+					<nav class="d-flex align-items-center">
+						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
+						<!-- <a href=""></a> -->
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+
+    <section class="checkout_area section_gap">
+        <div class="container">
+            <div class="billing_details">
+                <div class="row">
+					<h3>Add Address</h3>
+					<div class="table-responsive">
+						<form method="POST" action={% url 'users:user_address' %}>
+						<table class="table">
+							{% csrf_token %}
+							{{form.as_table}}
+						</table>
+						<input type="submit" value="Save and Continue" class="form-control btn btn-primary">
+					</form>
+            </div>
+        </div>
+    </section>
+
+
+{% endblock content %}

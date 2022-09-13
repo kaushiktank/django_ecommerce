@@ -16,7 +16,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 # from django_ecommerce import custom_decorators
 
-from .forms import CreateUserForm
+from .forms import CreateUserForm, UserAddressForm
 import uuid
 import datetime
 
@@ -138,7 +138,7 @@ def register_page(request):
             current_site = get_current_site(request)
             uid = str(uuid.uuid4()) + str(context['username'])
             token = urlsafe_base64_encode(force_bytes(uid))
-            verification_link = 'https://' + current_site.domain + '/user/verification/' + token + '/'
+            verification_link = 'http://' + current_site.domain + '/user/verification/' + token + '/'
             UserDetails.objects.create(user_id=user, user_name=context['username'], verification=False, verification_token=token)
 
             # Send verification email notification
@@ -260,3 +260,31 @@ def edit_user_profile(request):
 
     context = {'mobile':mobile, 'address':address}
     return render (request, 'user_profile_edit.html', context)
+
+
+def user_address(request):
+    form = UserAddressForm()
+    print('route called')
+    if request.method == 'POST':
+        form = UserAddressForm(request.POST)
+        if form.is_valid():
+            portfolio = form.save(commit=False)
+            portfolio.user = request.user
+            portfolio.save()
+            return redirect('products:conformation')
+
+    context = {'form': form}
+    return render(request, 'user_address.html', context = context)
+
+def order_history(request):
+    orders = Orders.objects.filter(user_id=request.user)
+    print(orders)
+    for odr in orders:
+        order_items = OrderItems.objects.filter(user_id=request.user.id, order_id=odr.id)
+        odr.total_items = len(order_items)
+
+    print(orders)
+
+    context = {'orders': orders}
+
+    return render(request, 'order_history.html', context = context)

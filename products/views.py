@@ -1,5 +1,3 @@
-from re import I
-import re
 from django.http import request
 # from products.tasks import send_order_email_task
 from django.contrib.auth import models
@@ -66,52 +64,52 @@ def shop_page(request):
     return render(request, 'shop.html', context)
 
 
-# def first_brands(request):
-#     brand_product = get_brands_count()
-#     products = Products.objects.filter(prod_brand=brand_product[0]['brand_id'])[:20]
-#     brand_name = brand_product[0]['brand_name']
-#     context = {'brand_product':brand_product,'products':products, 'brand_name':brand_name}
-#     return render(request, 'shop_brand.html', context)
+def first_brands(request):
+    brand_product = get_brands_count()
+    products = Products.objects.filter(prod_brand=brand_product[0]['brand_id'])[:20]
+    brand_name = brand_product[0]['brand_name']
+    context = {'brand_product':brand_product,'products':products, 'brand_name':brand_name}
+    return render(request, 'shop_brand.html', context)
 
-class FirstBrand(ListView):
-    model = ProdBrand
-    template_name = 'shop_brand.html'
-    context_object_name = 'brand_product'
+# class FirstBrand(ListView):
+#     model = ProdBrand
+#     template_name = 'shop_brand.html'
+#     context_object_name = 'brand_product'
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        product_brand = ProdBrand.objects.all()
-        # print(product_brand)
-        context["products"] = Products.objects.filter(prod_brand=product_brand[0].id)[:20]
-        context['brand_name'] = product_brand[0].brand
-        # print(context)
-        return context
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         product_brand = ProdBrand.objects.all()
+#         # print(product_brand)
+#         context["products"] = Products.objects.filter(prod_brand=product_brand[0].id)[:20]
+#         context['brand_name'] = product_brand[0].brand
+#         # print(context)
+#         return context
     
 
-class ShopBrand(ListView):
-    model = ProdBrand
-    template_name = 'shop_brand.html'
-    context_object_name = 'brand_product'
+# class ShopBrand(ListView):
+#     model = ProdBrand
+#     template_name = 'shop_brand.html'
+#     context_object_name = 'brand_product'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # print("Brand ID: ",self.kwargs.brand_id)
-        prod = Products.objects.filter(prod_brand_id = self.kwargs.brand_id)
-        if len(prod) >= 1:
-            context["products"] = prod
-        else:
-            context['custom_message'] = "No Data Found"
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         # print("Brand ID: ",self.kwargs.brand_id)
+#         prod = Products.objects.filter(prod_brand_id = self.kwargs.brand_id)
+#         if len(prod) >= 1:
+#             context["products"] = prod
+#         else:
+#             context['custom_message'] = "No Data Found"
 
-        return context
+#         return context
 
 
-# def shop_brand(request, brand_id):
-#     products = Products.objects.filter(prod_brand_id = brand_id)[:20]
-#     if len(products) >= 1:
-#         context = {'brand_product':get_brands_count(), 'products':products}
-#     else:
-#         context = {'brand_product':get_brands_count(), 'custom_message':"No Data Found"}
-#     return render(request, 'shop_brand.html', context)
+def shop_brand(request, brand_id):
+    products = Products.objects.filter(prod_brand_id = brand_id)[:20]
+    if len(products) >= 1:
+        context = {'brand_product':get_brands_count(), 'products':products}
+    else:
+        context = {'brand_product':get_brands_count(), 'custom_message':"No Data Found"}
+    return render(request, 'shop_brand.html', context)
 
 
 def product_details(request, product_id):
@@ -144,7 +142,6 @@ def add_to_cart(request):
             return JsonResponse({'status':0})
 
 
-
 class GetSearchResult(ListView):
     queryset = ProductCategory.objects.all()
     template_name = 'search_result.html'
@@ -166,15 +163,6 @@ class GetSearchResult(ListView):
             self.context['custom_messages'] = 'No Data Found'
 
         return render(request, 'search_result.html', self.context)
-
-        
-    
-    # queryset = ProductCategory.objects.all()
-    # context_object_name = 'product_category'
-    # if request.method == 'POST':
-    #     context['products'] = ""
-
-
 
 
 def first_category(request):
@@ -234,108 +222,72 @@ def get_cart_details(request):
 
 def conformation(request):
     cart = Cart.objects.filter(user_id = request.user.id)
-    try:
-        address = Address.objects.filter(user_id = request.user.id)[0]
-    except:
-        address = {}
+    address = Address.objects.filter(user_id = request.user.id)
+    if address:
 
-    user_details = User.objects.filter(id = request.user.id)[0]
-    print(user_details)
-    print("user_details.email: ", user_details.email)
-    cart_product = []
-    for id in cart:
-        dic = {}
-        products = Products.objects.filter(id = id.product_id)[0]
-        dic['prod_name'] = products.prod_name
-        dic['prod_price'] = products.prod_price
-        dic['total_price'] = (products.prod_price) * (id.cart_quantity)
-        dic['cart_quantity'] = id.cart_quantity
-        dic['cart_id'] = id.pk
-        cart_product.append(dic)
+        user_details = User.objects.filter(id = request.user.id)[0]
+        print(user_details)
+        print("user_details.email: ", user_details.email)
+        cart_product = []
+        for id in cart:
+            dic = {}
+            products = Products.objects.filter(id = id.product_id)[0]
+            dic['prod_name'] = products.prod_name
+            dic['prod_price'] = products.prod_price
+            dic['total_price'] = (products.prod_price) * (id.cart_quantity)
+            dic['cart_quantity'] = id.cart_quantity
+            dic['cart_id'] = id.pk
+            cart_product.append(dic)
 
 
-    total_items = 0
-    sub_total = 0
-    gst = 0
-    for n in cart_product:
-        total_items += n['cart_quantity']
-        sub_total = sub_total + n['total_price']
-        gst = gst + ( 0.18 * n['total_price'])
+        total_items = 0
+        sub_total = 0
+        gst = 0
+        for n in cart_product:
+            total_items += n['cart_quantity']
+            sub_total = sub_total + n['total_price']
+            gst = gst + ( 0.18 * n['total_price'])
 
-    grand_total = gst + sub_total
-    context = {'cart_product':cart_product, 'cart':cart, 'grand_total':grand_total,'gst':gst, 'total_items':total_items, 'address':address}
+        grand_total = gst + sub_total
+        context = {'cart_product':cart_product, 'cart':cart, 'grand_total':grand_total,'gst':gst, 'total_items':total_items, 'address':address}
 
-    # cart_details = Cart.objects.filter(user_id = request.user.id)
-    # print("address.pk: ", address.pk)
-    # mobile_no = UserMobileNo.objects.filter(user_id = request.user.id)[0]
-    # order = Orders(
-    #     user_id = user_details,
-    #     total_amount = grand_total,
-    #     address = address,
-    #     mobile = mobile_no,
-    #     order_status = 'Confirm'
-    # )
+        cart_details = Cart.objects.filter(user_id = request.user.id)
+        print("address.pk: ", address[0].pk)
 
+        # Create a new order.
+        order = Orders(
+            user_id = user_details,
+            total_amount = grand_total,
+            address = address[0],
+            order_status = 'Confirm'
+        )
+        order.save()
 
-    # print("order:\n ")
-    # print(order)
-    # a = order.save()
-    # print(a)
-    # user_id
-    # total_amount
-    # address
-    # mobile
-    # order_date_time
-    # order_status
+        # Add cart items in another table to save order items
+        for item in cart_details:
+            product_detail = Products.objects.filter(id = item.product_id)[0]
+            order_items = OrderItems(user_id = request.user, order_id=order, item_id = product_detail, quantity=item.cart_quantity, price = product_detail.prod_price)
+            order_items.save()
+            
+            # Change the items inventory quantity
+            product_detail.quantity = product_detail.quantity-item.cart_quantity
+            product_detail.save()
 
-    # order_id = 0
-    # items = []
-    # for item in cart_details:
-    #     product_detail = Products.objects.filter(id = item.product_id)[0]
-    #     items.append(OrderItems(order_id=order_id, item_id = item.product_id, quantity=item.cart_quantity, price = product_detail.prod_price, tax=product_detail.prod_price*0.18))
-       
-    # print("items: ", items)
         
+        # Send Email
+        context['order'] = order
+        context['address'] = address[0]
+        subject = 'Your order has been confirmed'
+        html_message = render_to_string('order_mail_template.html', context)
+        plain_message = strip_tags(html_message)
+        from_email = 'Django-eCommerce <pragnakalpdjango@gmail.com>'
+        to = [request.user.email]
 
+        # send_mail(subject, plain_message, from_email, to, html_message=html_message)
 
-    subject = 'Your order has been confirmed'
-    html_message = render_to_string('order_mail_template.html', context)
-    plain_message = strip_tags(html_message)
-    from_email = 'Django-eCommerce <pragnakalpdjango@gmail.com>'
-    to = [request.user.email]
-
-    # send_mail(subject, plain_message, from_email, to, html_message=html_message)
-
-
-    # print('cart is assigned')
-    # send_mail(
-    #     'Here is your cart details',
-    #     'YOu can find your cart details here',
-    #     'pragnakalpdjango@gmail.com',
-    #     ['pragnakalp.dev28@gmail.com'],
-    #     fail_silently=False,
-    # )
-
+        # Clear cart items
+        Cart.objects.filter(user_id=request.user.id).delete()
+        return render (request, 'conformation.html', context)
     
-    # if request.method == 'POST':
-    #     form = OrdersForm(request.POST)
-    #     print('form is assigned')
-    #     print(form)
-    #     user_id = request.POST.get('user_id')
-    #     product_id = request.POST.get('product_id')
-    #     quantity = request.POST.get('quantity')
-    #     address = request.POST.get('address')
-    #     mobile = request.POST.get('mobile')
-    #     print('user_id: ' +user_id+ ' product_id: ' +product_id+ ' quantity: ' +quantity+ ' address: '+address+' mobile: '+mobile)
-    #     form.save()
-
-        # if form.is_valid():
-        #     print('form is validetes')
-        #     form.save()
-
-            # sent an email here
-            # delete recoard in cart
-        # cart = Cart.objects.filter(user_id = request.user.id)
-        # cart.delete()
-
-    return render (request, 'conformation.html', context)
+    else:
+        return redirect('users:user_address')

@@ -2,14 +2,14 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import FirstBrand, GetSearchResult, ShopBrand, add_to_cart, conformation, filter_category, first_category, get_cart_details, home_page, product_details, shop_page
+from .views import *
 
 urlpatterns = [
     path('', home_page, name='homepage'),
     path('shop/', shop_page, name='shoppage'),
     path('cart/', get_cart_details, name='get_cart_details'),
-    path('shop/brand/', FirstBrand.as_view(), name='all_brands'),
-    path('shop/brand/<int:brand_id>/', ShopBrand, name='filter_by_brand'),
+    path('shop/brand/', first_brands, name='all_brands'),
+    path('shop/brand/<int:brand_id>/', shop_brand, name='filter_by_brand'),
     path('shop/category/', first_category, name='all_category'),
     path('shop/category/<int:category_id>/', filter_category, name='filter_by_category'),
     path('shop/product/<int:product_id>/', product_details, name='product_details'),

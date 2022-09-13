@@ -1,0 +1,56 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Order History</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Cart Area =================-->
+    <section class="cart_area">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Order ID</th>
+                                <th scope="col">Order Date-Time</th>
+                                <th scope="col">Total Items</th>
+                                <th scope="col">Order Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for odr in orders %}
+
+                            <tr>
+                                <td>
+                                    <h5>{{odr.id}}</h5>
+                                </td>
+                                <td>
+                                    <h5> {{ odr.order_date_time }}</h5>
+                                </td>
+                                <td>
+                                    <h5> {{ odr.total_items }}</h5>
+                                </td>
+                                <td>
+                                    <h5><i class="fa fa-inr" aria-hidden="true"></i> {{ odr.total_amount }}</h5>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Cart Area =================-->
+{% endblock content %}

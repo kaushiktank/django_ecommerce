@@ -10,5 +10,7 @@ urlpatterns = [
     path('profile/', user_profile, name='user_profile'),
     path('profile/edit/', edit_user_profile, name='edit_user_profile'),
     path('verification/<str:token>/', verification, name='verification'),
-    path('resend_verification/', resend_verification, name='resend_verification')
+    path('resend_verification/', resend_verification, name='resend_verification'),
+    path('user_address/', user_address, name='user_address'),
+    path('order_history/', order_history, name='order_history')
 ]

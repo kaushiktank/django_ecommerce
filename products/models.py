@@ -66,17 +66,18 @@ class Orders(models.Model):
     user_id = models.ForeignKey(User, on_delete=CASCADE)
     total_amount = models.IntegerField()
     address = models.ForeignKey(Address, on_delete=CASCADE)
-    order_date_time = models.TimeField(auto_now=True)
+    order_date_time = models.DateTimeField(auto_now=True)
     order_status = models.CharField(max_length=150, null=True)
 
     class Meta:
         verbose_name_plural = "User Orders"
 
     def __str__(self):
-        return self.user_id
+        return str(self.id)
 
 
 class OrderItems(models.Model):
+    user_id = models.ForeignKey(User, on_delete=CASCADE)
     order_id = models.ForeignKey(Orders, on_delete=CASCADE)
     item_id = models.ForeignKey(Products, on_delete=CASCADE)
     quantity = models.IntegerField()
@@ -86,4 +87,4 @@ class OrderItems(models.Model):
         verbose_name_plural = "User Order Items"
 
     def __str__(self):
-        return self.user_id
+        return str(self.id)
