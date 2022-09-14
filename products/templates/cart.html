@@ -92,34 +92,25 @@
                             </tr>
                             <tr class="out_button_area">
                                 <td>
-
-                                </td>
-                                <td>
-                                    
-                                </td>
-                                <td>
                                     <h5>Address:</h5>
                                 </td>
-                                <td>
-                                    <h5>{{ address.address_line_1 }}, </h5>
-                                    <h5>{{ address.address_line_2 }}, </h5>
-                                    <h5>{{ address.city }}, {{ address.state }}, </h5>
-                                    <h5>{{ address.zip_code }}</h5>
-                                    <h5>{{ address.country }}</h5>
+                                <td colspan="3">
+                                    <div class="align-items-right">
+                                    <select>
+                                        {% for adr in address %}
+                                        <option value={{adr.pk}}>{{ adr.address_line_1 }}, {{ adr.address_line_2 }}, {{ adr.city }}, {{adr.zip_code }}, {{ adr.state }}, {{ adr.country }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                                 </td>
                             </tr>
                             <tr class="out_button_area">
-                                <td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
 
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-
-                                </td>
-                                <td>
-                                    <div class="checkout_btn_inner d-flex align-items-center">
+                                <td colspan="3">
+                                    <div class="checkout_btn_inner d-flex align-items-rignt">
                                         <a class="gray_btn" href={% url 'products:shoppage' %}>Continue Shopping</a>
                                         <a class="primary-btn" href={% url 'products:conformation' %}>Proceed to checkout</a>
                                     </div>

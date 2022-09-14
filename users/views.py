@@ -1,7 +1,5 @@
-from csv import unregister_dialect
-from multiprocessing.dummy import active_children
-import re
 from users.models import Address, UserDetails, Plans, UserPlans
+from products.models import *
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -199,12 +197,17 @@ def user_profile(request):
     except:
         user_mobile_number = None
     try:
-        address = Address.objects.filter(user = request.user.id)[0]
+        address = Address.objects.filter(user_id = request.user.id)[0]
     except:
         address = None
 
     context = {'user_mobile_number':user_mobile_number, 'address':address}
-    return render(request, 'user_profile.html', context)
+    return render(request, 'user_profile_dashbord.html', context)
+
+
+def view_user_profile(request):
+    context = {}
+    return render(request, 'user_profile_display.html', context)
 
 
 def edit_user_profile(request):
@@ -214,14 +217,14 @@ def edit_user_profile(request):
     # address_form = Address.objects.filter(user_id = request.user.id)
     
 
-    try:
-        mobile = UserMobileNo.objects.filter(user_id = request.user.id)[0]
-    except:
-        mobile = None
-    try:
-        address = Address.objects.filter(user_id = request.user.id)[0]
-    except:
-        address = None
+    # try:
+    #     mobile = UserMobileNo.objects.filter(user_id = request.user.id)[0]
+    # except:
+    #     mobile = None
+    # try:
+    #     address = Address.objects.filter(user_id = request.user.id)[0]
+    # except:
+    #     address = None
         
     if request.method=='POST':  
         user = User.objects.filter(id = request.user.id)
@@ -230,35 +233,35 @@ def edit_user_profile(request):
         last_name = request.POST.get('last_name')
         user.update(first_name = first_name, last_name = last_name, username = username)
 
-        mobile_number = request.POST.get('mobile_number')
-        alternative_mobile_number = request.POST.get('alternative_mobile')
+        # mobile_number = request.POST.get('mobile_number')
+        # alternative_mobile_number = request.POST.get('alternative_mobile')
 
-        address_line_1 = request.POST.get('address_line_1')
-        address_line_2 = request.POST.get('address_line_2')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-        zip_code = request.POST.get('zipcode')
-        country = request.POST.get('country')
+        # address_line_1 = request.POST.get('address_line_1')
+        # address_line_2 = request.POST.get('address_line_2')
+        # city = request.POST.get('city')
+        # state = request.POST.get('state')
+        # zip_code = request.POST.get('zipcode')
+        # country = request.POST.get('country')
 
-        mobile = UserMobileNo.objects.filter(user_id = request.user.id)
-        # print("Length of mobile number data: ", len(mobile))
-        # print(mobile)
-        if len(mobile) >= 1:
-            mob_obj = mobile.update(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number)
-        else:
-            mob_obj = UserMobileNo.objects.create(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number, user_id = request.user.id)
+        # mobile = UserMobileNo.objects.filter(user_id = request.user.id)
+        # # print("Length of mobile number data: ", len(mobile))
+        # # print(mobile)
+        # if len(mobile) >= 1:
+        #     mob_obj = mobile.update(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number)
+        # else:
+        #     mob_obj = UserMobileNo.objects.create(mobile_number = mobile_number, alternative_mobile_number = alternative_mobile_number, user_id = request.user.id)
 
-        address = Address.objects.filter(user_id = request.user.id)
-        # print("Length of mobile number data: ", len(mobile))
-        # print(mobile)
-        if len(address) >= 1:
-            adr_obj = address.update(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country)
-        else:
-            adr_obj = Address.objects.create(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country, user_id = request.user.id)
+        # address = Address.objects.filter(user_id = request.user.id)
+        # # print("Length of mobile number data: ", len(mobile))
+        # # print(mobile)
+        # if len(address) >= 1:
+        #     adr_obj = address.update(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country)
+        # else:
+        #     adr_obj = Address.objects.create(address_line_1 = address_line_1, address_line_2 = address_line_2, city = city, state = state, zip_code = zip_code, country = country, user_id = request.user.id)
 
         return redirect('users:user_profile')
 
-    context = {'mobile':mobile, 'address':address}
+    context = {}
     return render (request, 'user_profile_edit.html', context)
 
 
@@ -288,3 +291,48 @@ def order_history(request):
     context = {'orders': orders}
 
     return render(request, 'order_history.html', context = context)
+
+def add_address(request):
+    form = UserAddressForm()
+    print('route called')
+    if request.method == 'POST':
+        form = UserAddressForm(request.POST)
+        if form.is_valid():
+            portfolio = form.save(commit=False)
+            portfolio.user_id = request.user
+            portfolio.save()
+            return redirect('users:all_addresses')
+
+    context = {'form': form}
+    return render(request, 'user_address.html', context = context)
+
+def all_addresses(request):
+    addresses = Address.objects.filter(user_id=request.user.id)
+    context = {'addresses': addresses}
+    return render(request, 'all_addresses.html', context = context)
+
+
+def edit_address(request, address_id):
+    try:
+        address = Address.objects.filter(pk=address_id, user_id = request.user.id)
+        form = UserAddressForm(instance=address[0])
+    except:
+        return redirect('users:all_addresses')
+
+    if request.method == 'POST':
+        form = UserAddressForm(request.POST, instance=address[0])
+        if form.is_valid():
+            form.save()
+            return redirect('users:user_profile')
+
+    context = {'form': form}
+    return render(request, 'edit_address.html', context = context)
+
+
+def delete_address(request, address_id):
+    try:
+        Address.objects.filter(pk=address_id, user_id = request.user.id).delete()
+    except:
+        return redirect('users:all_addresses')
+    
+    return redirect('users:all_addresses')

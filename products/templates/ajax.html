@@ -29,6 +29,23 @@
       success: function (data) {
         if (data.status == "save") {
           console.log("saved");
+          var title = "Cart"
+          var message = 'Item added to cart'
+          var position = 'nfc-top-right'
+          var duration = 2000
+          var theme = 'success'
+          var closeOnClick = true
+          var displayClose = true
+          window.createNotification({
+            closeOnClick: closeOnClick,
+            displayCloseButton: displayClose,
+            positionClass: position,
+            showDuration: duration,
+            theme: theme
+          })({
+            title: title,
+            message: message
+          });
         } else {
           console.log("error");
           console.log(data);

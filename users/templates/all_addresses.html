@@ -1,0 +1,68 @@
+{% extends 'base.html' %} 
+{% load static %}
+{% block content %}
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>User Address</h1>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Cart Area =================-->
+    <section class="cart_area">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center">
+				<div class="sorting mr-auto">
+					<h2>Addresses</h2>
+				</div>
+				<div class="">
+					<a href={% url 'users:add_address' %} class="genric-btn primary">Add New Address</a>
+				</div>
+			</div>
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Address</th>
+                                <th scope="col">City</th>
+                                <th scope="col">State</th>
+                                <th scope="col">Mobile</th>
+                                <th scope="col">Modify</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for adr in addresses %}
+
+                            <tr>
+                                <td>
+                                    <h5>{{adr.address_line_1}}, {{adr.address_line_2}}</h5>
+                                </td>
+                                <td>
+                                    <h5> {{ adr.city }}, {{adr.zip_code}}</h5>
+                                </td>
+                                <td>
+                                    <h5> {{ adr.state }}, {{adr.country}}</h5>
+                                </td>
+                                <td>
+                                    <h5>{{ adr.mobile_number }}, {{ adr.alternative_mobile_number}}</h5>
+                                </td>
+                                <td>
+                                    <h5><a href={% url 'users:edit_address' adr.id %}>Edit</a> | <a href={% url 'users:delete_address' adr.id %}>Delete</a></h5>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Cart Area =================-->
+{% endblock content %}

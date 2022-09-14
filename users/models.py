@@ -5,7 +5,7 @@ from django.db.models.deletion import CASCADE
 
 
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=CASCADE)
+    user_id = models.ForeignKey(User, on_delete=CASCADE)
     address_line_1 = models.CharField(max_length=255, default=None)
     address_line_2 = models.CharField(max_length=255, default=None)
     city = models.CharField(max_length=255, default=None)

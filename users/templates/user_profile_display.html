@@ -7,7 +7,7 @@
 		<div class="container">
 			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
 				<div class="col-first">
-					<h1>{{ request.user.username }} Profile</h1>
+					<h1>Profile Dashboard</h1>
 					<nav class="d-flex align-items-center">
 						<a href={% url 'products:homepage' %}>Home<span class="lnr lnr-arrow-right"></span></a>
 						<!-- <a href=""></a> -->
@@ -20,11 +20,6 @@
 
     <section class="order_details section_gap">
 		<div class="container">
-			<div class="d-flex flex-wrap align-items-center">
-				<div class="sorting mr-auto">
-					<a href={% url 'users:order_history' %}><h4>Order History</h4></a>
-				</div>
-			</div>
 			<div class="d-flex flex-wrap align-items-center">
 				<div class="sorting mr-auto">
 					<h2>Profile</h2>
@@ -68,73 +63,8 @@
 									<p>{{ request.user.email }}</p>
 								</td>
 							</tr>
-                            <tr>
-								<td>
-									<p>Mobile number: </p>
-								</td>
-								<td>
-									<p>{{ address.mobile_number }}</p>
-								</td>
-							</tr>
-                            <tr>
-								<td>
-									<p>Alternative Mobile Number: </p>
-								</td>
-								<td>
-									<p>{{ address.alternative_mobile_number }}</p>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<p>Address Line 1: </p>
-								</td>
-								<td>
-									<p>{{ address.address_line_1 }}</p>
-								</td>
-							</tr>
-                            <tr>
-								<td>
-									<p>Address Line 2: </p>
-								</td>
-								<td>
-									<p>{{ address.address_line_2 }}</p>
-								</td>
-							</tr>
-                            <tr>
-								<td>
-									<p>City: </p>
-								</td>
-								<td>
-									<p>{{ address.city }}</p>
-								</td>
-							</tr>
-                            <tr>
-								<td>
-									<p>State: </p>
-								</td>
-								<td>
-									<p>{{ address.state }}</p>
-								</td>
-							</tr>
-                            <tr>
-								<td>
-									<p>Zipcode: </p>
-								</td>
-								<td>
-									<p>{{ address.zip_code }}</p>
-								</td>
-							</tr>
-                            <tr>
-								<td>
-									<p>Country: </p>
-								</td>
-								<td>
-									<p>{{ address.country }}</p>
-								</td>
-							</tr>
 						</tbody>
 					</table>
-
 			</div>
 		</div>
 	</section>

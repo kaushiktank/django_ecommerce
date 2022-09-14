@@ -137,7 +137,14 @@ def add_to_cart(request):
                 cart.save()
             else:
                 form.save()
-            return JsonResponse({'status':'save'})
+            return JsonResponse({'status':'save',
+                                'title':'Cart', 
+                                'message':'Item Added to Cart', 
+                                'position':'nfc-top-right',
+                                'duration':2000, 
+                                'theme': 'success',
+                                'closeOnClick': True,
+                                'displayClose': True,})
         else:
             return JsonResponse({'status':0})
 
@@ -187,7 +194,7 @@ def get_cart_details(request):
 
     cart = Cart.objects.filter(user_id = request.user.id)
     try:
-        address = Address.objects.filter(user_id = request.user.id)[0]
+        address = Address.objects.filter(user_id = request.user.id)
     except:
         address = {}
     cart_product = []
@@ -223,71 +230,75 @@ def get_cart_details(request):
 def conformation(request):
     cart = Cart.objects.filter(user_id = request.user.id)
     address = Address.objects.filter(user_id = request.user.id)
-    if address:
+    cart = Cart.objects.filter(user_id = request.user.id)
+    if cart:
+        if address:
 
-        user_details = User.objects.filter(id = request.user.id)[0]
-        print(user_details)
-        print("user_details.email: ", user_details.email)
-        cart_product = []
-        for id in cart:
-            dic = {}
-            products = Products.objects.filter(id = id.product_id)[0]
-            dic['prod_name'] = products.prod_name
-            dic['prod_price'] = products.prod_price
-            dic['total_price'] = (products.prod_price) * (id.cart_quantity)
-            dic['cart_quantity'] = id.cart_quantity
-            dic['cart_id'] = id.pk
-            cart_product.append(dic)
+            user_details = User.objects.filter(id = request.user.id)[0]
+            print(user_details)
+            print("user_details.email: ", user_details.email)
+            cart_product = []
+            for id in cart:
+                dic = {}
+                products = Products.objects.filter(id = id.product_id)[0]
+                dic['prod_name'] = products.prod_name
+                dic['prod_price'] = products.prod_price
+                dic['total_price'] = (products.prod_price) * (id.cart_quantity)
+                dic['cart_quantity'] = id.cart_quantity
+                dic['cart_id'] = id.pk
+                cart_product.append(dic)
 
 
-        total_items = 0
-        sub_total = 0
-        gst = 0
-        for n in cart_product:
-            total_items += n['cart_quantity']
-            sub_total = sub_total + n['total_price']
-            gst = gst + ( 0.18 * n['total_price'])
+            total_items = 0
+            sub_total = 0
+            gst = 0
+            for n in cart_product:
+                total_items += n['cart_quantity']
+                sub_total = sub_total + n['total_price']
+                gst = gst + ( 0.18 * n['total_price'])
 
-        grand_total = gst + sub_total
-        context = {'cart_product':cart_product, 'cart':cart, 'grand_total':grand_total,'gst':gst, 'total_items':total_items, 'address':address}
+            grand_total = gst + sub_total
+            context = {'cart_product':cart_product, 'cart':cart, 'grand_total':grand_total,'gst':gst, 'total_items':total_items, 'address':address}
 
-        cart_details = Cart.objects.filter(user_id = request.user.id)
-        print("address.pk: ", address[0].pk)
+            cart_details = Cart.objects.filter(user_id = request.user.id)
+            print("address.pk: ", address[0].pk)
 
-        # Create a new order.
-        order = Orders(
-            user_id = user_details,
-            total_amount = grand_total,
-            address = address[0],
-            order_status = 'Confirm'
-        )
-        order.save()
+            # Create a new order.
+            order = Orders(
+                user_id = user_details,
+                total_amount = grand_total,
+                address = address[0],
+                order_status = 'Confirm'
+            )
+            order.save()
 
-        # Add cart items in another table to save order items
-        for item in cart_details:
-            product_detail = Products.objects.filter(id = item.product_id)[0]
-            order_items = OrderItems(user_id = request.user, order_id=order, item_id = product_detail, quantity=item.cart_quantity, price = product_detail.prod_price)
-            order_items.save()
+            # Add cart items in another table to save order items
+            for item in cart_details:
+                product_detail = Products.objects.filter(id = item.product_id)[0]
+                order_items = OrderItems(user_id = request.user, order_id=order, item_id = product_detail, quantity=item.cart_quantity, price = product_detail.prod_price)
+                order_items.save()
+                
+                # Change the items inventory quantity
+                product_detail.quantity = product_detail.quantity-item.cart_quantity
+                product_detail.save()
+
             
-            # Change the items inventory quantity
-            product_detail.quantity = product_detail.quantity-item.cart_quantity
-            product_detail.save()
+            # Send Email
+            context['order'] = order
+            context['address'] = address[0]
+            subject = 'Your order has been confirmed'
+            html_message = render_to_string('order_mail_template.html', context)
+            plain_message = strip_tags(html_message)
+            from_email = 'Django-eCommerce <pragnakalpdjango@gmail.com>'
+            to = [request.user.email]
 
+            # send_mail(subject, plain_message, from_email, to, html_message=html_message)
+
+            # Clear cart items
+            Cart.objects.filter(user_id=request.user.id).delete()
+            return render (request, 'conformation.html', context)
         
-        # Send Email
-        context['order'] = order
-        context['address'] = address[0]
-        subject = 'Your order has been confirmed'
-        html_message = render_to_string('order_mail_template.html', context)
-        plain_message = strip_tags(html_message)
-        from_email = 'Django-eCommerce <pragnakalpdjango@gmail.com>'
-        to = [request.user.email]
-
-        # send_mail(subject, plain_message, from_email, to, html_message=html_message)
-
-        # Clear cart items
-        Cart.objects.filter(user_id=request.user.id).delete()
-        return render (request, 'conformation.html', context)
-    
+        else:
+            return redirect('users:user_address')
     else:
-        return redirect('users:user_address')
+        return redirect('products:homepage')

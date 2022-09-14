@@ -16,14 +16,19 @@ class ProductSubCategoryAdmin(admin.ModelAdmin):
 class CartAdmin(admin.ModelAdmin):
     list_display = ('user_id','product_id','cart_quantity')
 
+class OrderItemsAdmin(admin.ModelAdmin):
+    list_display = ('user_id','order_id','item_id','quantity','price')
+
+class OrdersAdmin(admin.ModelAdmin):
+    list_display = ('user_id','total_amount','address','order_date_time','order_status')
 
 admin.site.register(ProdBrand)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(ProductCategory, ProductCategoryAdmin)
 admin.site.register(ProductSubCategory)
 admin.site.register(Cart, CartAdmin)
-admin.site.register(OrderItems)
-admin.site.register(Orders)
+admin.site.register(OrderItems, OrderItemsAdmin)
+admin.site.register(Orders, OrdersAdmin)
 
 
 admin.site.site_header = 'Django eCommerce Admin'

@@ -60,77 +60,12 @@
 										<input disabled value="{{ request.user.email }}" type="text" class="form-control" id="email" name="email">
 									</td>
 								</tr>
-								<tr>
-									<td>
-										<p>Mobile number: </p>
-									</td>
-									<td>
-										<input type="number" value="{{ mobile.mobile_number }}" class="form-control" id="mobile_number" name="mobile_number">
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p>Alternative Mobile Number: </p>
-									</td>
-									<td>
-										<input type="num" value="{{ mobile.alternative_mobile_number }}" class="form-control" id="alternative_mobile" name="alternative_mobile">
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p>Address Line 1: </p>
-									</td>
-									<td>
-										<input type="text" value="{{ address.address_line_1 }}" class="form-control" id="address_line_1" name="address_line_1">
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p>Address Line 2: </p>
-									</td>
-									<td>
-										<input type="text" value="{{ address.address_line_1 }}" class="form-control" id="address_line_2" name="address_line_2">
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p>City: </p>
-									</td>
-									<td>
-										<input type="text" value="{{ address.city }}" class="form-control" id="city" name="city">
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p>State: </p>
-									</td>
-									<td>
-										<input type="text" value="{{ address.state }}" class="form-control" id="state" name="state">
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p>Zipcode: </p>
-									</td>
-									<td>
-										<input type="text" value="{{ address.zip_code }}" class="form-control" id="zipcode" name="zipcode">
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<p>Country: </p>
-									</td>
-									<td>
-										<input type="text" value="{{ address.country }}" class="form-control" id="country" name="country">
-									</td>
-								</tr>
-								<tr>
 									<td>
 									</td>
 									<td>
 										<input type="submit" value="Update Details" class="form-control btn btn-primary">
 									</td>
-								</tr>
+								</tr> 
 							</tbody>
 						</table>
 					</form>
@@ -139,4 +74,4 @@
     </section>
 
 
-{% endblock content %}
+{% endblock content %}'mobile':mobile, 'address':address
