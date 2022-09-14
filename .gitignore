@@ -2,7 +2,7 @@
 # Created by https://www.gitignore.io
 
 env_variable.py
-
+env_django/
 ### OSX ###
 .DS_Store
 .AppleDouble
