@@ -1,20 +1,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-  console.log("file included");
-  $("#add_to_cart").click(function () {
-    console.log("button cicked");
-    let product_id = ($('#product_id').attr('value'));
-    let user_id = ($('#user_id').attr('value'));
-    if ($(".input-text qty").val()) {
-      console.log($(".input-text qty").val());
-      let cart_quantity = $(".input-text qty").val();
+  function add_to_cart(product_id, user_id) {
+    let csr = $("input[name=csrfmiddlewaretoken]").val();
+    if ($(".product_count input").val()) {
+      console.log($(".product_count input").val());
+      var cart_quantity = $(".product_count input").val();
     } else {
       cart_quantity = 1;
     }
-    let csr = $("input[name=csrfmiddlewaretoken]").val();
-    console.log(product_id);
-    console.log(user_id);
-    console.log(cart_quantity);
+
+    // console.log("product id", product_id);
+    // console.log(user_id);
+    // console.log(cart_quantity);
 
     cart = {
       product_id: product_id,
@@ -22,6 +19,7 @@
       cart_quantity: cart_quantity,
       csrfmiddlewaretoken: csr,
     };
+    
     $.ajax({
       url: "{% url 'products:add_to_cart' %}",
       method: "POST",
@@ -29,13 +27,13 @@
       success: function (data) {
         if (data.status == "save") {
           console.log("saved");
-          var title = "Cart"
-          var message = 'Item added to cart'
-          var position = 'nfc-top-right'
-          var duration = 2000
-          var theme = 'success'
-          var closeOnClick = true
-          var displayClose = true
+          var title = data.title
+          var message = data.message
+          var position = data.position
+          var duration = data.duration
+          var theme = data.theme
+          var closeOnClick = data.closeOnClick
+          var displayClose = data.displayClose
           window.createNotification({
             closeOnClick: closeOnClick,
             displayCloseButton: displayClose,
@@ -48,9 +46,114 @@
           });
         } else {
           console.log("error");
-          console.log(data);
+          var title = data.title
+          var message = data.message
+          var position = data.position
+          var duration = data.duration
+          var theme = data.theme
+          var closeOnClick = data.closeOnClick
+          var displayClose = data.displayClose
+          window.createNotification({
+            closeOnClick: closeOnClick,
+            displayCloseButton: displayClose,
+            positionClass: position,
+            showDuration: duration,
+            theme: theme
+          })({
+            title: title,
+            message: message
+          });
         }
       },
     });
-  });
+  }
+
+  // function update_cart(product_id, user_id){
+  //   console.log("update_cart");
+  //   // console.log(this.val());
+  //   console.log($(this).val());
+  //   // let csr = $("input[name=csrfmiddlewaretoken]").val();
+  //   // if ($(".product_count input").val()) {
+  //   //   console.log($(".product_count input").val());
+  //   //   var cart_quantity = $(".product_count input").val();
+  //   // } else {
+  //   //   cart_quantity = 1;
+  //   // }
+
+  //   // cart = {
+  //   //   product_id: product_id,
+  //   //   user_id: user_id,
+  //   //   cart_quantity: cart_quantity,
+  //   //   csrfmiddlewaretoken: csr,
+  //   // };
+  // }
+
+  function update_cart(){
+    data = {}
+    $(".product_count").each(function(){
+      // console.log($(this).data("product_id"));
+      // console.log($(this).data("user"));
+      // // console.log(this);
+      // console.log($(this).children('#sst').val());
+      tmp = {product_id: $(this).data("product_id"), 
+            user_id: $(this).data("user"),
+            cart_quantity: $(this).children('#sst').val()}
+      data[$(this).data("product_id")] = tmp;
+    })
+
+    let csr = $("input[name=csrfmiddlewaretoken]").val();
+    data['csrfmiddlewaretoken'] = csr
+    console.log(data);
+
+    $.ajax({
+      url: "{% url 'products:update_cart' %}",
+      method: "POST",
+      data: data,
+      success: function (data) {
+        if (data.status == "save") {
+          console.log("saved");
+          var title = data.title
+          var message = data.message
+          var position = data.position
+          var duration = data.duration
+          var theme = data.theme
+          var closeOnClick = data.closeOnClick
+          var displayClose = data.displayClose
+          window.createNotification({
+            closeOnClick: closeOnClick,
+            displayCloseButton: displayClose,
+            positionClass: position,
+            showDuration: duration,
+            theme: theme
+          })({
+            title: title,
+            message: message
+          });
+        } else {
+          console.log("error");
+          var title = data.title
+          var message = data.message
+          var position = data.position
+          var duration = data.duration
+          var theme = data.theme
+          var closeOnClick = data.closeOnClick
+          var displayClose = data.displayClose
+          window.createNotification({
+            closeOnClick: closeOnClick,
+            displayCloseButton: displayClose,
+            positionClass: position,
+            showDuration: duration,
+            theme: theme
+          })({
+            title: title,
+            message: message
+          });
+        }
+      },
+    });
+  }
+
+  function update_single_cart_item(){
+    console.log(this);
+  }
 </script>

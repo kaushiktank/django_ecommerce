@@ -19,8 +19,11 @@ class CreateUserForm(UserCreationForm):
 class UserAddressForm(forms.ModelForm):
     class Meta:
         model = Address
-        fields = ('address_line_1','address_line_2','city','state','zip_code','country','mobile_number','alternative_mobile_number')
+        fields = ('first_name', 'last_name', 'email', 'address_line_1','address_line_2','city','state','zip_code','country','mobile_number','alternative_mobile_number')
         widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control',}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control',}),
+            'email': forms.EmailInput(attrs={'class': 'form-control',}),
             'address_line_1': forms.TextInput(attrs={'class':'form-control'}),
             'address_line_2': forms.TextInput(attrs={'class':'form-control'}),
             'city': forms.TextInput(attrs={'class':'form-control'}),

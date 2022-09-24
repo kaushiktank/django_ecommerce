@@ -33,6 +33,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% csrf_token %}
                             {% for product in cart_product %}
 
                             <tr>
@@ -50,28 +51,39 @@
                                     <h5><i class="fa fa-inr" aria-hidden="true"></i> {{ product.prod_price }}</h5>
                                 </td>
                                 <td>
-                                    <h5> {{ product.cart_quantity }}</h5>
+                                    <h5>{{ product.cart_quantity }}</h5>
+
+                                    <!-- <div class="product_count" data-product_id={{product.product_id}} data-user={{request.user.id}}>
+                                        <input type="text" onchange="update_single_cart_item()" data-product_id={{product.product_id}} data-user={{request.user.id}} name="qty" id="sst" maxlength="12" value={{ product.cart_quantity }} title="Quantity:" class="input-text qty">
+                                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+                                        class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                                        <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+                                        class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                                    </div> -->
                                 </td>
                                 <td>
                                     <h5> {{ product.total_price }}</h5>
                                 </td>
-                                <!-- {% if product.cart_id == product.id %} -->
-                                    <!-- <td>
-                                        <div class="product_count">
-                                            <input type="text" name="quantity" id="sst" maxlength="12" value={{ product.cart_quantity }} title="Quantity:"
-                                                class="input-text qty">
-                                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                                                class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                                            <button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-                                                class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                                        </div>
-                                    </td> -->
-                                    <!-- <td>
-                                        <h5><i class="fa fa-inr" aria-hidden="true"></i>{{product.total_price}}</h5>
-                                    </td> -->
-                                <!-- {% endif %} -->
                             </tr>
                             {% endfor %}
+                            <tr class="bottom_button">
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+                                    <div class="cupon_text d-flex align-items-center">
+                                        <input type="text" placeholder="Coupon Code">
+                                        <a class="primary-btn" href="#">Apply</a>
+                                        <a class="gray_btn" >Update Cart</a>
+                                </div>
+                                </td>
+                            </tr>
                             <tr>
                                 <td>
 
@@ -81,20 +93,16 @@
                                 </td>
                                 <td>
                                     <h5>Subtotal</h5>
-                                    <h5>GST 18%</h5>
-                                    <h5>Grand Total</h5>
                                 </td>
                                 <td>
                                     <h5>{{ sub_total }}</h5>
-                                    <h5>{{ gst }}</h5>
-                                    <h5>{{grand_total}}</h5>
                                 </td>
                             </tr>
                             <tr class="out_button_area">
                                 <td>
-                                    <h5>Address:</h5>
+                                    <h5>Address </h5>
                                 </td>
-                                <td colspan="3">
+                                <td colspan="4">
                                     <div class="align-items-right">
                                     <select>
                                         {% for adr in address %}
@@ -112,7 +120,7 @@
                                 <td colspan="3">
                                     <div class="checkout_btn_inner d-flex align-items-rignt">
                                         <a class="gray_btn" href={% url 'products:shoppage' %}>Continue Shopping</a>
-                                        <a class="primary-btn" href={% url 'products:conformation' %}>Proceed to checkout</a>
+                                        <a class="primary-btn" href={% url 'users:select_address' %}>Proceed to checkout</a>
                                     </div>
                                 </td>
                             </tr>
@@ -123,4 +131,6 @@
         </div>
     </section>
     <!--================End Cart Area =================-->
+
+{% include 'ajax.html' %}
 {% endblock content %}

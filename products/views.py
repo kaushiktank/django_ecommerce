@@ -1,3 +1,4 @@
+from xml.sax.handler import property_interning_dict
 from django.http import request
 # from products.tasks import send_order_email_task
 from django.contrib.auth import models
@@ -120,33 +121,98 @@ def product_details(request, product_id):
     return render(request, 'single_product.html', context)
 
 
-@login_required(login_url='users:login_user')
 def add_to_cart(request):
-    if request.method =="POST":
-        form = CartForm(request.POST)
-        if form.is_valid():
-            product_id = form.cleaned_data['product_id']
-            print(form.cleaned_data)
-            try:
-                cart = Cart.objects.filter(user_id = request.user.id, product_id=product_id)[0]
-            except:
-                cart = {}
-            
-            if cart:
-                cart.cart_quantity = cart.cart_quantity + form.cleaned_data['cart_quantity']
-                cart.save()
+    if request.user.is_authenticated:
+        if request.method =="POST":
+            form = CartForm(request.POST)
+            if form.is_valid():
+                product_id = form.cleaned_data['product_id']
+                print(form.cleaned_data)
+                try:
+                    cart = Cart.objects.filter(user_id = request.user.id, product_id=product_id)[0]
+                except:
+                    cart = {}
+                
+                if cart:
+                    cart.cart_quantity = cart.cart_quantity + form.cleaned_data['cart_quantity']
+                    cart.save()
+                else:
+                    form.save()
+                return JsonResponse({'status':'save',
+                                    'title':'Item Added to Cart', 
+                                    'message':'', 
+                                    'position':'nfc-top-right',
+                                    'duration':2000, 
+                                    'theme': 'success',
+                                    'closeOnClick': True,
+                                    'displayClose': True,})
             else:
-                form.save()
-            return JsonResponse({'status':'save',
-                                'title':'Cart', 
-                                'message':'Item Added to Cart', 
-                                'position':'nfc-top-right',
-                                'duration':2000, 
-                                'theme': 'success',
-                                'closeOnClick': True,
-                                'displayClose': True,})
-        else:
-            return JsonResponse({'status':0})
+                return JsonResponse({'status':0,
+                                    'title':'Error adding item to cart', 
+                                    'message':'',
+                                    'duration':2000, 
+                                    'theme': 'error',
+                                    'closeOnClick': True,
+                                    'displayClose': True,})
+    else:
+        return JsonResponse({'status':'0',
+                                    'title':'Please Login or Register to add items into cart', 
+                                    'message':'', 
+                                    'position':'nfc-top-right',
+                                    'duration':2000, 
+                                    'theme': 'error',
+                                    'closeOnClick': True,
+                                    'displayClose': True,})
+
+
+def update_cart(request):
+    if request.user.is_authenticated:
+        if request.method =="POST":
+            # print("REQUEST DATA", request.POST)
+            request_data = request.\
+            print("REQUEST DATA", request_data)
+            print("REQUEST DATA", request_data.keys())
+            for item in request_data:
+                print(request_data[item])
+            # form = CartForm(request.POST)
+            # if form.is_valid():
+            #     product_id = form.cleaned_data['product_id']
+            #     print(form.cleaned_data)
+            #     try:
+            #         cart = Cart.objects.filter(user_id = request.user.id, product_id=product_id)[0]
+            #     except:
+            #         cart = {}
+                
+            #     if cart:
+            #         cart.cart_quantity = cart.cart_quantity + form.cleaned_data['cart_quantity']
+            #         cart.save()
+            #     else:
+            #         form.save()
+            #     return JsonResponse({'status':'save',
+            #                         'title':'Item Added to Cart', 
+            #                         'message':'', 
+            #                         'position':'nfc-top-right',
+            #                         'duration':2000, 
+            #                         'theme': 'success',
+            #                         'closeOnClick': True,
+            #                         'displayClose': True,})
+            # else:
+            #     return JsonResponse({'status':0,
+            #                         'title':'Error adding item to cart', 
+            #                         'message':'',
+            #                         'duration':2000, 
+            #                         'theme': 'error',
+            #                         'closeOnClick': True,
+            #                         'displayClose': True,})
+    else:
+        return JsonResponse({'status':'0',
+                                    'title':'Please Login or Register to add items into cart', 
+                                    'message':'', 
+                                    'position':'nfc-top-right',
+                                    'duration':2000, 
+                                    'theme': 'error',
+                                    'closeOnClick': True,
+                                    'displayClose': True,})
 
 
 class GetSearchResult(ListView):
@@ -214,6 +280,7 @@ def get_cart_details(request):
         dic['total_price'] = (products.prod_price) * (id.cart_quantity)
         dic['cart_quantity'] = id.cart_quantity
         dic['cart_id'] = id.pk
+        dic['product_id'] = products.pk
         cart_product.append(dic)
 
     sub_total = 0
@@ -268,7 +335,8 @@ def conformation(request):
                 user_id = user_details,
                 total_amount = grand_total,
                 address = address[0],
-                order_status = 'Confirm'
+                order_status = 'Confirm',
+                order_note = ''
             )
             order.save()
 

@@ -18,5 +18,5 @@ urlpatterns = [
     path('address/edit/<str:address_id>/', edit_address, name='edit_address'),
     path('address/delete/<str:address_id>/', delete_address, name='delete_address'),
     path('address/add/', add_address, name='add_address'),
-
+    path('select_address/', select_address, name='select_address'),
 ]

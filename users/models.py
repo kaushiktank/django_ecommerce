@@ -6,6 +6,9 @@ from django.db.models.deletion import CASCADE
 
 class Address(models.Model):
     user_id = models.ForeignKey(User, on_delete=CASCADE)
+    first_name = models.CharField(max_length=255, blank=True, null=True)
+    last_name = models.CharField(max_length=255, blank=True, null=True)
+    email = models.CharField(max_length=255, blank=True, null=True)
     address_line_1 = models.CharField(max_length=255, default=None)
     address_line_2 = models.CharField(max_length=255, default=None)
     city = models.CharField(max_length=255, default=None)
@@ -13,7 +16,7 @@ class Address(models.Model):
     zip_code = models.CharField(max_length=20, default=None)
     country = models.CharField(max_length=255, default=None)
     mobile_number = models.CharField(max_length=15, default=None)
-    alternative_mobile_number = models.CharField(max_length=15, default=None) 
+    alternative_mobile_number = models.CharField(max_length=15, default=None, blank=True, null=True) 
 
     def __str__(self):
         return self.address_line_1 +", "+ self.address_line_2

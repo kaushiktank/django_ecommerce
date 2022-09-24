@@ -65,14 +65,16 @@
 							</li>
 							{% if request.user.is_authenticated %}
 
-							<li class="nav-item"><a class="nav-link" href={% url 'users:user_profile' %}>Welcome, {{ request.user.username }}</a></li>
+							<li class="nav-item"><a class="nav-link" href={% url 'users:user_profile' %}>{{ request.user.username }}</a></li>
 							<li class="nav-item"><a class="nav-link" href={% url 'users:logout' %}>Logout</a></li>							
 							{% else %}
 								<li class="nav-item"><a class="nav-link" href={% url 'users:login_user' %}>Login / Register</a></li>
 							{% endif %}
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
-							<li class="nav-item"><a href={% url 'products:get_cart_details' %} class="cart"><span class="ti-bag"></span></a></li>
+							{% if request.user.is_authenticated %}
+								<li class="nav-item"><a href={% url 'products:get_cart_details' %} class="cart"><span class="ti-bag"></span></a></li>
+							{% endif %}
 							<li class="nav-item"><a href={% url 'products:get_search_results' %} class="cart"><span class="lnr lnr-magnifier"></span></a>
 							</li>
 						</ul>

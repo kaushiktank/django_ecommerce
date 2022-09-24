@@ -15,7 +15,8 @@ urlpatterns = [
     path('shop/product/<int:product_id>/', product_details, name='product_details'),
     path('addcart/', add_to_cart, name='add_to_cart'),
     path('search/', GetSearchResult.as_view(), name='get_search_results'),
-    path('conformation/', conformation, name='conformation')
+    path('conformation/', conformation, name='conformation'),
+    path('update_cart/', update_cart, name='update_cart'),
 ]
 
 if settings.DEBUG:

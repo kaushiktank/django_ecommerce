@@ -51,22 +51,23 @@
 										<div class="price">
 											<h6><i class="fa fa-inr" aria-hidden="true"></i> {{ product.prod_price }}</h6>
 										</div>
-										<form action="" method="post">
-											{% csrf_token %}
-											<div class="prd-bottom">
-												<label value={{ product.id }} id="product_id"></label>
-												<label value={{ request.user.id }} id="user_id"></label>
-												<a id="add_to_cart" class="social-info" >
-													<span class="ti-bag"></span>
-													<p class="hover-text">add to bag</p>
-												</a>
-											</div>
-										</form>
+										{% csrf_token %}
+										<div class="prd-bottom">
+
+											<a class="social-info" onclick="add_to_cart('{{ product.id }}', '{{ request.user.id }}')">
+												<span class="ti-bag"></span>
+												<p class="hover-text">add to bag</p>
+											</a>
+											<a class="social-info">
+												<span class="lnr lnr-heart"></span>
+												<p class="hover-text">Wishlist</p>
+											</a>
+										</div>
 									</div>
 								</div>
 							</div>
 						</a>
-			  			{% endfor %}
+						{% endfor %}
 					</div>
 				</section>
 				<!-- End Best Seller -->

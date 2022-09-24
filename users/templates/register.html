@@ -48,7 +48,7 @@
 				</form>
 				{{ form.errors }}
 				<label >Already have an account <a href={% url 'users:login_user' %}>Login</a></label>
-
+				{{ form.errors.username }}
 			</div>
 		</div>
 

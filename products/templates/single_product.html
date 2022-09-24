@@ -36,28 +36,23 @@
 						<ul class="list">
 							<li><a class="active" href="#"><span>Category</span> : {{product_category.main_category}}</a></li>
 							{% if product.quantity >= 1 %}
-								<li><a href="#"><span>Availibility</span> : In Stock</a></li>
+								<li><a href="#"><span>Availibility</span> : In Stock ({{product.quantity}})</a></li>
 							{% else %}
 								<li><a href="#"><span>Availibility</span> : Out of Stock</a></li>
 							{% endif %}
 						</ul>
 						<p>{{product.prod_description}}</p>
-						<form action="" method="post">
-							{% csrf_token %}
-							<div class="product_count">
-								<label for="qty">Quantity:</label>
-								<input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:" class="input-text qty">
-								<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-								class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-								<button onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
-								class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-							</div>
-							<div class="card_area d-flex align-items-center">
-								<label value={{ product.id }} id="product_id"></label>
-								<label value={{ request.user.id }} id="user_id"></label>
-								<a class="primary-btn" id="add_to_cart">Add to Cart</a>
-							</div>
-						</form>
+						{% csrf_token %}
+						<div class="product_count">
+							<label for="qty">Quantity:</label>
+							<input type="text" name="qty" id="sst cart_quantity" maxlength="12" value="1" title="Quantity" class="input-text qty">
+							
+						</div>
+						<div class="card_area d-flex align-items-center">
+							<label value={{ product.id }} id="product_id"></label>
+							<label value={{ request.user.id }} id="user_id"></label>
+							<button class="primary-btn" id="add_to_cart" onclick="add_to_cart('{{ product.id }}', '{{ request.user.id }}')">Add to Cart</button>
+						</div>
 					</div>
 				</div>
 				{% endfor %}

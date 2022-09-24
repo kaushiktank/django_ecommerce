@@ -117,7 +117,14 @@ def register_page(request):
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
         if form.is_valid():
-            form.save()
+            print(request.POST)
+            cleaned_data = form.cleaned_data
+            cleaned_data['password'] = cleaned_data['password1']
+            cleaned_data.pop('password1', None)
+            cleaned_data.pop('password2', None)
+            user = User(**cleaned_data)
+            user.save()
+            # form.save()
             context = form.cleaned_data
             user = User.objects.filter(username = context['username'], email = context['email'])[0]
 
@@ -279,6 +286,7 @@ def user_address(request):
     context = {'form': form}
     return render(request, 'user_address.html', context = context)
 
+
 def order_history(request):
     orders = Orders.objects.filter(user_id=request.user)
     print(orders)
@@ -291,6 +299,7 @@ def order_history(request):
     context = {'orders': orders}
 
     return render(request, 'order_history.html', context = context)
+
 
 def add_address(request):
     form = UserAddressForm()
@@ -305,6 +314,12 @@ def add_address(request):
 
     context = {'form': form}
     return render(request, 'user_address.html', context = context)
+
+
+def select_address(request):
+    address = Address.objects.filter(user_id = request.user.id)
+    context = {'addresses': address}
+    return render(request, 'select_address.html', context = context)
 
 def all_addresses(request):
     addresses = Address.objects.filter(user_id=request.user.id)

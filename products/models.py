@@ -1,4 +1,3 @@
-from statistics import mode
 from users.models import Address
 from django.db import models
 from django.db.models.deletion import CASCADE
@@ -68,6 +67,7 @@ class Orders(models.Model):
     address = models.ForeignKey(Address, on_delete=CASCADE)
     order_date_time = models.DateTimeField(auto_now=True)
     order_status = models.CharField(max_length=150, null=True)
+    order_note = models.CharField(max_length=255)
 
     class Meta:
         verbose_name_plural = "User Orders"
