@@ -19,7 +19,7 @@ from . import env_variable
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-oy4)7qr-!%5rkv6ome=ort0%z5p7m0@e(=c+j&1%qt5_+h@@dp'
+SECRET_KEY = env_variable.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
